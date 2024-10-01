@@ -2,22 +2,22 @@
 	{
 		"dates": "April 2024 · Present",
 		"role": "Teacher and Research Staff",
-		"company": "University of Málaga - EDANYA Research Group",
+		"company": "University of Malaga - EDANYA Research Group",
 		"description": "Attached to the Geo-INQUIRE research project.",
-		"logo": "/assets/images/experiences/logo-uma.png"
+		"logo": "/assets/images/logos/uma.webp"
 	},
 	{
-		"dates": "September 2024 · December 2024",
+		"dates": "September 2023 · December 2023",
 		"role": "High School Teacher",
 		"company": "C.D.P. Santa María De Los Ángeles",
 		"description": "Responsible for the computer maintenance of the centre, as well as teacher of Mathematics, Information and Communication Technologies and Programming.",
-		"logo": "/assets/images/experiences/logo-sma.jpg"
+		"logo": "/assets/images/logos/sma.webp"
 	},
 	{
 		"dates": "April 2023 · April 2024",
 		"role": "Full Stack Developer",
 		"company": "Cloudari",
-		"description": "Main developer on a document management platform.",
-		"logo": "/assets/images/experiences/cloudari-logo.png"
+		"description": "Full stack developer on a document management platform.",
+		"logo": "/assets/images/logos/cloudari.webp"
 	}
 ]

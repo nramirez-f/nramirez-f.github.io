@@ -1,11 +1,15 @@
 ---
 import experiences from "../collections/experiences.json";
-import AboutExperience from "../components/about-experience.astro";
+import courses from "../collections/courses.json";
+import studies from "../collections/studies.json";
+import AboutExperience from "../components/about/Experience.astro";
+import AboutStudie from "../components/about/Studie.astro";
+import AboutCourse from "../components/about/Course.astro";
 import PageHeading from "../components/page-heading.astro";
 import Layout from "../layouts/main.astro";
 ---
 
-<Layout title="About Me">
+<Layout title="Nramirez | About">
   <section class="relative z-20 max-w-2xl mx-auto my-12 px-7 lg:px-0">
     <PageHeading
       title="About Me"
@@ -13,67 +17,124 @@ import Layout from "../layouts/main.astro";
     />
 
     <img src="/assets/images/about.webp" class="relative z-30 w-full my-10 rounded-xl" />
+    
 
-
-
-    <div>
+    <div id="menu-container">
       <ul class="flex justify-center text-sm font-medium text-center text-gray-500 dark:text-gray-400">
         <li class="mx-2">
-            <a href="#" class="inline-block px-4 py-3 text-white bg-black rounded-full active" aria-current="page">Experience</a>
+          <a href="#" section-target="experience" class="inline-block px-4 py-3 rounded-full hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white active bg-black text-white" aria-current="page">Experience</a>
         </li>
         <li class="mx-2">
-            <a href="#"  class="inline-block px-4 py-3 rounded-full hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white">Studies</a>
+          <a href="#" section-target="studies" class="inline-block px-4 py-3 rounded-full hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white">Studies</a>
         </li>
         <li class="mx-2">
-            <a href="#" class="inline-block px-4 py-3 rounded-full hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white">Certifications</a>
+          <a href="#" section-target="certifications" class="inline-block px-4 py-3 rounded-full hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white">Certificates</a>
         </li>
       </ul>
     </div>
-    <h2
-      class="mt-5 mb-2 text-2xl font-bold lg:mt-10 sm:mt-6 dark:text-neutral-200"
-    >
-      Experience
-    </h2>
-    <div class="px-5 py-10">
-      {
-        experiences.map((experience, loop) => {
-          return (
-            <>
-              {loop == 0 || loop == 1 ? (
-                <div class="pb-10 border-l border-gray-200 dark:border-neutral-700">
-                  <AboutExperience
-                    dates={experience.dates}
-                    role={experience.role}
-                    company={experience.company}
-                    description={experience.description}
-                    logo={experience.logo}
-                  />
-                </div>
-              ) : (
-                <AboutExperience
-                  dates={experience.dates}
-                  role={experience.role}
-                  company={experience.company}
-                  description={experience.description}
-                  logo={experience.logo}
-                />
-              )}
-            </>
-          )
-        })
-      }
+    <div class="content-sections">
+      <section id="experience" class="content block">
+        <h2 class="mt-5 mb-2 text-2xl font-bold lg:mt-10 sm:mt-6 dark:text-neutral-200">Experience</h2>
+        <div class="px-5 py-10">
+          {
+            experiences.map((experience, index) => {
+              return (
+                <>
+                  {index < (experiences.length - 1) ? (
+                    <div class="pb-10 border-l border-gray-200 dark:border-neutral-700">
+                      <AboutExperience
+                        dates={experience.dates}
+                        role={experience.role}
+                        company={experience.company}
+                        description={experience.description}
+                        logo={experience.logo}
+                      />
+                    </div>
+                  ) : (
+                    <AboutExperience
+                      dates={experience.dates}
+                      role={experience.role}
+                      company={experience.company}
+                      description={experience.description}
+                      logo={experience.logo}
+                    />
+                  )}
+                </>
+              )
+            })
+          }
+        </div>
+      </section>
+      
+      <section id="studies" class="content hidden">
+        <h2 class="mt-5 mb-2 text-2xl font-bold lg:mt-10 sm:mt-6 dark:text-neutral-200">Studies</h2>
+        <div class="px-5 py-10">
+          {
+            studies.map((studie, index) => {
+              return (
+                <>
+                  {index < (studies.length - 1) ? (
+                    <div class="pb-10 border-l border-gray-200 dark:border-neutral-700">
+                      <AboutStudie
+                        dates={studie.dates}
+                        study={studie.study}
+                        centre={studie.centre}
+                        logo={studie.logo}
+                      />
+                    </div>
+                  ) : (
+                    <AboutStudie
+                      dates={studie.dates}
+                      study={studie.study}
+                      centre={studie.centre}
+                      logo={studie.logo}
+                    />
+                  )}
+                </>
+              )
+            })
+          }
+        </div>
+      </section>
+    
+      <section id="certifications" class="content hidden">
+        <h2 class="mt-5 mb-2 text-2xl font-bold lg:mt-10 sm:mt-6 dark:text-neutral-200">Certifications</h2>
+          <div class="px-5 py-10">
+            {
+              courses.map((course, index) => {
+                return (
+                  <>
+                    {index < (courses.length - 1) ? (
+                      <div class="pb-10 border-l border-gray-200 dark:border-neutral-700">
+                        <AboutCourse
+                          dates={course.dates}
+                          title={course.title}
+                          centre={course.centre}
+                          logo={course.logo}
+                        />
+                      </div>
+                    ) : (
+                      <AboutCourse
+                        dates={course.dates}
+                        title={course.title}
+                        centre={course.centre}
+                        logo={course.logo}
+                      />
+                    )}
+                  </>
+                )
+              })
+            }
+        </div>
+      </section>
     </div>
 
     <h2 class="mt-5 mb-2 text-2xl font-bold lg:mt-10 sm:mt-6 dark:text-neutral-200">Let's Connect</h2>
     <p
       class="text-sm leading-6 text-gray-600 dark:text-neutral-400 sm:leading-7 lg:leading-8 sm:text-base lg:text-lg"
     >
-      If you want to stay up to date with my work be sure to <a
-        href="https://twitter.com/ccikai"
-        target="_blank"
-        class="text-indigo-600 underline">follow me on twitter</a
-      >, or you can send me an <a href="mailto:astro-aria#miantiao.me" class="text-indigo-600 underline"
-        >email</a
+      If you want to send me an email to <a target="_blank" href="mailto:fibodev27@gmail.com" class="text-indigo-600 underline"
+        >fibodev27@gmail.com</a
       > and I'll be sure to get back to you.
     </p>
   </section>

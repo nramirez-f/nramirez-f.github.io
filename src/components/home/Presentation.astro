@@ -1,5 +1,8 @@
 ---
-import Button from "../../components/button.astro";
+import ButtonIcon from "@components/ButtonIcon.astro";
+import GithubIcon from "@icons/GithubIcon.astro";
+import MailIcon from "@icons/MailIcon.astro";
+import LinkedinIcon from "@icons/LinkedinIcon.astro";
 ---
 <div class="relative z-20 w-full max-w-4xl mx-auto mt-16 px-7 md:mt-24 lg:mt-32 xl:px-0">
     <div class="flex flex-col items-center md:flex-row">
@@ -26,24 +29,22 @@ import Button from "../../components/button.astro";
             <li>Full Stack Web Development</li>
             <li>and more...</li>
         </ul>
-        <Button text="Twitter 𝕏" link="https://twitter.com/0xKaiBi" />
+        <div class="flex flex-row gap-1 justify-center">
+            <ButtonIcon text="Github" link="https://github.com/nramirez-f">
+                <GithubIcon class="w-6 h-6" />
+            </ButtonIcon>
+            <ButtonIcon text="fibodev27@gmail.com" link="mailto:fibodev27@gmail.com">
+                <MailIcon class="w-6 h-6" />
+            </ButtonIcon>
+            <ButtonIcon text="Linkedin" link="https://es.linkedin.com/in/jos%C3%A9-ignacio-ram%C3%ADrez-fuentes-937a38251">
+                <LinkedinIcon class="w-6 h-6" />
+            </ButtonIcon>
+        </div>
         </div>
         <div
         class="relative justify-end hidden w-full mt-10 md:flex md:pl-10 md:w-1/2 md:mt-0 md:translate-y-4 xl:translate-y-0"
         >
         <div class="relative z-50 w-full">
-            <div
-            class="absolute bottom-0 z-40 w-16 h-16 -translate-x-6 -translate-y-1/2 lg:top-auto top-0 lg:-translate-y-[330px] rounded-full"
-            >
-            <span
-                class="relative z-20 flex items-center justify-center w-full h-full text-2xl border-8 border-white rounded-full dark:border-neutral-950 bg-neutral-100 dark:bg-neutral-900"
-            >
-                <span
-                class="flex items-center justify-center w-full h-full bg-white border border-dashed rounded-full dark:bg-neutral-950 border-neutral-300 dark:border-neutral-700"
-                >👋</span
-                >
-            </span>
-            </div>
             <div class="relative z-30 px-10">
             <img
                 src="/assets/images/avatar.png"

@@ -1,14 +1,23 @@
 [
 	{
+		"dates": "October 2024 · November 2024",
+		"title": "Fundamentals of Accelerated Computing with CUDA C/C++",
+		"centre": "NVIDIA Deep Learning Institute",
+		"logo": "/assets/images/logos/nvidia-logo.webp",
+		"link": "https://learn.nvidia.com/certificates?id=FCa6IK55SWyVbT_yJGMYpA"
+	},
+	{
 		"dates": "October 2023 · April 2024",
 		"title": "Relational databases and data modeling",
 		"centre": "Nebrija University",
-		"logo": "/assets/images/logos/nebrija.webp"
+		"logo": "/assets/images/logos/nebrija.webp",
+		"link": "/assets/certificates/bbdd-nebrija.pdf"
 	},
 	{
 		"dates": "April 2023 · September 2023",
 		"title": "PHP Language",
 		"centre": "Intalentia Innovation",
-		"logo": "/assets/images/logos/inta.webp"
+		"logo": "/assets/images/logos/inta.webp",
+		"link": "/assets/certificates/php-intalentia.pdf"
 	}
 ]

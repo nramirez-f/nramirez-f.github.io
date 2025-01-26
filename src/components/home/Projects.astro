@@ -1,7 +1,7 @@
 ---
-import projects from "../../collections/projects.json";
+import projects from "@collections/projects.json";
 import Button from "@components/button.astro";
-import Project from "../project.astro";
+import ProjectCard from "@components/home/projectCard.astro";
 ---
 
 <section class="max-w-4xl mx-auto px-7 lg:px-0">
@@ -20,7 +20,7 @@ import Project from "../project.astro";
     {
       projects.map((project) => {
         return (
-          <Project
+          <ProjectCard
             name={project.name}
             description={project.description}
             image={project.image}

@@ -1,26 +1,30 @@
 [
 	{
 		"dates": "September 2022 · December 2024",
-		"study": "Master in Mathematics",
-		"centre": "University of Malaga",
-		"logo": "/assets/images/logos/uma.webp"
+		"study": "Master's of Mathematics",
+		"centre": "Universidad de Málaga",
+		"logo": "/assets/images/logos/uma.webp",
+		"thesis": "Master's thesis: Navier-Stokes Equations: Theory and Numerical Implementation",
+		"thesis-url": "/assets/thesis/tfm.pdf"
 	},
 	{
 		"dates": "September 2022 · July 2023",
-		"study": "Master in teaching compulsory secondary education, post-compulsory secondary education, vocational trainingand languages (sp. Mathematics)",
-		"centre": "University of Malaga",
+		"study": "Master's of teaching compulsory secondary education, post-compulsory secondary education, vocational trainingand languages (sp. Mathematics)",
+		"centre": "Universidad de Málaga",
 		"logo": "/assets/images/logos/uma.webp"
 	},
 	{
 		"dates": "September 2017 · July 2022",
-		"study": "Bachelor of Science, Mathematics",
-		"centre": "University of Malaga",
-		"logo": "/assets/images/logos/uma.webp"
+		"study": "Bachelor's of Science, Mathematics",
+		"centre": "Universidad de Málaga",
+		"logo": "/assets/images/logos/uma.webp",
+		"thesis": "Bachelor's thesis: Z-Transform and applications to signals and systems",
+		"thesis-url": "/assets/thesis/tfg.pdf"
 	},
 	{
 		"dates": "September 2012 · July 2017",
 		"study": "Secondary Education",
-		"centre": "Escuelas Ave María",
+		"centre": "Escuelas del Ave María",
 		"logo": "/assets/images/logos/eam.webp"
 	}
 ]

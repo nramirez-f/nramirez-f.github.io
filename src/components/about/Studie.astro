@@ -1,5 +1,5 @@
 ---
-const { logo, dates, study, centre} = Astro.props;
+const { logo, dates, study, centre, thesis} = Astro.props;
 ---
 
 <div class="relative flex flex-col justify-start pl-12">
@@ -16,4 +16,5 @@ const { logo, dates, study, centre} = Astro.props;
   </p>
   <h3 class="my-1 text-lg font-bold dark:text-neutral-100 text-balance">{study}</h3>
   <p class="mb-1 text-sm font-medium dark:text-neutral-300">{centre}</p>
+  <a href="#" target="_blank" class="text-xs underline text-neutral-400 dark:text-neutral-500 ">{thesis}</a>
 </div>

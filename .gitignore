@@ -1,0 +1,18 @@
+# node dependencies
+node_modules/
+
+# Astro build output
+dist/
+
+# local env files
+.env
+.env.*.local
+
+# Mac system files
+.DS_Store
+
+# VSCode settings (opcional)
+.vscode/
+
+# pnpm lockfile (si usas solo npm o yarn, puedes eliminar esta línea)
+.pnpm-debug.log

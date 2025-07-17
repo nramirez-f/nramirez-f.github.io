@@ -2,15 +2,30 @@
 import ButtonIcon from "@components/ButtonIcon.astro";
 import GithubIcon from "@icons/GithubIcon.astro";
 import LinkedinIcon from "@icons/LinkedinIcon.astro";
+
+
+import SplitText from "@components/react/SplitText";
+const handleAnimationComplete = () => {
+  console.log('All letters have animated!');
+};
 ---
 <div class="relative z-20 w-full max-w-4xl mx-auto mt-16 px-7 md:mt-24 lg:mt-32 xl:px-0">
     <div class="flex flex-col items-center">
         <div class="relative w-full text-center">
-            <h1
-                class="mb-5 text-4xl font-bold leading-tight md:text-4xl lg:text-6xl dark:text-white"
-            >
-                Hello, I'm Nacho.
-            </h1>
+            <SplitText client:load
+                text="Hello, I'm Nacho!"
+                className="mb-5 text-4xl font-bold leading-tight md:text-4xl lg:text-6xl dark:text-white"
+                delay={40}
+                duration={0.9}
+                ease="power3.out"
+                splitType="chars"
+                from={{ opacity: 0, y: 40 }}
+                to={{ opacity: 1, y: 0 }}
+                threshold={0.1}
+                rootMargin="-100px"
+                textAlign="center"
+                onLetterAnimationComplete={handleAnimationComplete}
+            />
             <p class="mb-6 text-base text-neutral-600 dark:text-neutral-400">
                 I'm a Mathematician and Software Developer living in Málaga. <br
                 class="hidden lg:block"

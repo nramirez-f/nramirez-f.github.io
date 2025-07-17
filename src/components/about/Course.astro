@@ -1,5 +1,5 @@
 ---
-const { logo, dates, title, centre} = Astro.props;
+const { logo, dates, title, centre, link} = Astro.props;
 ---
 
 <div class="relative flex flex-col justify-start pl-12">
@@ -16,4 +16,9 @@ const { logo, dates, title, centre} = Astro.props;
   </p>
   <h3 class="my-1 text-lg font-bold dark:text-neutral-100 text-balance">{title}</h3>
   <p class="mb-1 text-sm font-medium dark:text-neutral-300">{centre}</p>
+  {link ? (
+  <div class="text-right">
+    <a class="text-sm font-bold dark:text-neutral-100 w-fit hover:underline" href={link} target="blank">See title ></a>
+  </div>
+  ) : null}
 </div>

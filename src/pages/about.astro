@@ -1,12 +1,15 @@
 ---
-import experiences from "../collections/experiences.json";
-import courses from "../collections/courses.json";
-import studies from "../collections/studies.json";
-import AboutExperience from "../components/about/Experience.astro";
-import AboutStudie from "../components/about/Studie.astro";
-import AboutCourse from "../components/about/Course.astro";
-import PageHeading from "../components/page-heading.astro";
+import experiences from "@collections/experiences.json";
+import courses from "@collections/courses.json";
+import studies from "@collections/studies.json";
+import AboutExperience from "@components/about/Experience.astro";
+import ButtonIcon from "@components/ButtonIcon.astro";
+import CVIcon from "@icons/CVIcon.astro";
+import AboutStudie from "@components/about/Studie.astro";
+import AboutCourse from "@components/about/Course.astro";
+import PageHeading from "@components/page-heading.astro";
 import Layout from "../layouts/main.astro";
+import PaperPlaneIcon from "@icons/PaperPlaneIcon.astro";
 ---
 
 <Layout title="Nramirez | About">
@@ -15,6 +18,11 @@ import Layout from "../layouts/main.astro";
       title="About Me"
       description="Hi! I am constantly working to enhance my mathematical and programming skills, with a strong focus on improving my analytical abilities and problem-solving techniques."
     />
+    <div class="flex flex-wrap mt-2 gap-2 justify-center items-center">
+      <ButtonIcon text="Curriculum Vitae" link="/assets/documents/CV.pdf">
+        <CVIcon></CVIcon>
+      </ButtonIcon>
+    </div>
 
     <img src="/assets/images/about.webp" class="relative z-30 w-full my-10 rounded-xl" />
     
@@ -28,7 +36,7 @@ import Layout from "../layouts/main.astro";
           <a href="#" section-target="studies" class="inline-block px-4 py-3 rounded-full transition-colors duration-300 hover:text-white hover:bg-black dark:hover:text-black dark:hover:bg-white">Studies</a>
         </li>
         <li class="mx-2">
-          <a href="#" section-target="certifications" class="inline-block px-4 py-3 rounded-full transition-colors duration-300 hover:text-white hover:bg-black dark:hover:text-black dark:hover:bg-white">Certificates</a>
+          <a href="#" section-target="certifications" class="inline-block px-4 py-3 rounded-full transition-colors duration-300 hover:text-white hover:bg-black dark:hover:text-black dark:hover:bg-white">Certifications</a>
         </li>
       </ul>
     </div>
@@ -80,6 +88,7 @@ import Layout from "../layouts/main.astro";
                         study={studie.study}
                         centre={studie.centre}
                         logo={studie.logo}
+                        thesis={studie.thesis}
                       />
                     </div>
                   ) : (
@@ -88,6 +97,7 @@ import Layout from "../layouts/main.astro";
                       study={studie.study}
                       centre={studie.centre}
                       logo={studie.logo}
+                      thesis={studie.thesis}
                     />
                   )}
                 </>
@@ -111,6 +121,7 @@ import Layout from "../layouts/main.astro";
                           title={course.title}
                           centre={course.centre}
                           logo={course.logo}
+                          link={course.link}
                         />
                       </div>
                     ) : (
@@ -119,6 +130,7 @@ import Layout from "../layouts/main.astro";
                         title={course.title}
                         centre={course.centre}
                         logo={course.logo}
+                        link={course.link}
                       />
                     )}
                   </>
@@ -129,13 +141,18 @@ import Layout from "../layouts/main.astro";
       </section>
     </div>
 
-    <h2 class="mt-5 mb-2 text-2xl font-bold lg:mt-10 sm:mt-6 dark:text-neutral-200">Let's Connect</h2>
+    <h2 class="mt-5 mb-2 text-2xl font-bold lg:mt-10 sm:mt-6 dark:text-neutral-200">Get in touch</h2>
     <p
       class="text-sm leading-6 text-gray-600 dark:text-neutral-400 sm:leading-7 lg:leading-8 sm:text-base lg:text-lg"
     >
-      If you want to send me an email to <a target="_blank" href="mailto:fibodev27@gmail.com" class="text-indigo-600 underline"
-        >fibodev27@gmail.com</a
-      > and I'll be sure to get back to you.
+      If you want, send me a message. I'll be sure to get back to you.
     </p>
+    <br>
+    <div class="flex flex-wrap mt-2 gap-2 justify-center items-center">
+      <ButtonIcon text="Let's Connect" link="https://form.typeform.com/to/YhloQnpo">
+        <PaperPlaneIcon></PaperPlaneIcon>
+      </ButtonIcon>
+    </div>
   </section>
 </Layout>
+

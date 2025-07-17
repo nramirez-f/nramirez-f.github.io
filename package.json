@@ -12,10 +12,17 @@
 	},
 	"devDependencies": {
 		"@astrojs/check": "^0.9.4",
+<<<<<<< HEAD
 		"@astrojs/tailwind": "^6.0.2",
 		"@biomejs/biome": "1.7.3",
 		"@tailwindcss/typography": "^0.5.13",
 		"astro": "^5.12.0",
+=======
+		"@astrojs/tailwind": "^5.1.4",
+		"@biomejs/biome": "1.7.3",
+		"@tailwindcss/typography": "^0.5.13",
+		"astro": "^5.1.7",
+>>>>>>> main
 		"tailwindcss": "^3.4.3",
 		"typescript": "^5.4.5"
 	},

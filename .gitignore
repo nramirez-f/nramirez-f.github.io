@@ -1,18 +1,33 @@
-# node dependencies
+# Node.js
 node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+.pnpm-debug.log*
 
-# Astro build output
+# Astro
+.astro/
 dist/
 
-# local env files
+# Environment files
 .env
 .env.*.local
+.env.local
 
-# Mac system files
-.DS_Store
-
-# VSCode settings (opcional)
+# Editor settings
 .vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
 
-# pnpm lockfile (si usas solo npm o yarn, puedes eliminar esta línea)
-.pnpm-debug.log
+# System files
+.DS_Store
+Thumbs.db
+
+# Tailwind
+*.css.map
+
+# Opt
+*.log

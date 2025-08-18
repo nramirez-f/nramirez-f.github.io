@@ -1,0 +1,81 @@
+---
+import Layout from "@layouts/main.astro";
+import projects from "@collections/projects.json";
+import ButtonIcon from "@components/ButtonIcon.astro";
+import GithubIcon from "@icons/GithubIcon.astro";
+
+import { marked } from "marked";
+
+export async function getStaticPaths() {
+  return projects.map((project) => ({
+    params: { repo: project.repo },
+    props: { project },
+  }));
+}
+
+const { repo } = Astro.params;
+const { project } = Astro.props;
+
+const username = "nramirez-f";
+const url = `https://raw.githubusercontent.com/${username}/${repo}/main/`;
+const repo_url = `https://github.com/${username}/${repo}`;
+const readme_url = url + "README.md";
+
+// Configure marked with custom renderer
+const renderer = new marked.Renderer();
+
+// Override image renderer to make URLs absolute
+renderer.image = function({ href, title, text }) {
+  let absoluteHref = href;
+  
+  // Check if the URL is relative (doesn't start with http/https)
+  if (href && typeof href === 'string' && !href.startsWith('http://') && !href.startsWith('https://')) {
+    // Remove leading ./ if present
+    const cleanHref = href.startsWith('./') ? href.slice(2) : href;
+    absoluteHref = `${url}${cleanHref}`;
+  }
+  
+  const titleAttr = title ? ` title="${title}"` : '';
+  return `<img src="${absoluteHref}" alt="${text}"${titleAttr}>`;
+};
+
+// Override link renderer to make URLs absolute
+renderer.link = function({ href, title, text }) {
+  let absoluteHref = href;
+  
+  // Check if the URL is relative (doesn't start with http/https or #)
+  if (href && typeof href === 'string' && !href.startsWith('http://') && !href.startsWith('https://') && !href.startsWith('#')) {
+    // Remove leading ./ if present
+    const cleanHref = href.startsWith('./') ? href.slice(2) : href;
+    absoluteHref = `${repo_url}/blob/main/${cleanHref}`;
+  }
+  
+  const titleAttr = title ? ` title="${title}"` : '';
+  return `<a href="${absoluteHref}"${titleAttr}>${text}</a>`;
+};
+
+// Set the custom renderer
+marked.setOptions({
+  renderer: renderer
+});
+
+const res = await fetch(readme_url);
+if (!res.ok) {
+  throw new Error(`No se pudo cargar el README de ${repo}`);
+}
+const readme = await res.text();
+const html = marked(readme);
+console.log(html);
+---
+
+<Layout title={project.name}>
+  <section class="max-w-3xl mx-auto p-8 prose dark:prose-invert">
+    <div class="flex justify-end">
+      <ButtonIcon text="Go to Repository" link={repo_url}>
+        <GithubIcon class="w-6 h-6" />
+      </ButtonIcon>
+    </div>
+
+    <div class="markdown mt-20" set:html={html} />
+  </section>
+</Layout>

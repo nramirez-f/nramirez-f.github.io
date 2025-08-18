@@ -1,8 +1,7 @@
 [
 	{
-		"name": "Minitalk",
-		"description": "The purpose of this project is to code a small data exchange program using UNIX signals.",
-		"image": "/assets/images/projects/email.ml.png",
-		"url": "#"
+		"name": "Lid Driven Cavity",
+		"description": "The purpose of this project is to implement a Navier-Stokes code for simulate fluids",
+		"repo": "Lid-Driven-Cavity"
 	}
 ]

@@ -23,8 +23,8 @@ import ProjectCard from "@components/home/projectCard.astro";
           <ProjectCard
             name={project.name}
             description={project.description}
-            image={project.image}
-            url={project.url}
+            image={`/assets/images/projects/${project.repo}_hero.webp`}
+            repo={project.repo}
           />
         );
       })

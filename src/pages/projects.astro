@@ -21,10 +21,10 @@ import Layout from "../layouts/main.astro";
             <Project
               name={project.name}
               description={project.description}
-              image={project.image}
-              url={project.url}
+              image={`/assets/images/projects/${project.repo}_hero.webp`}
+              repo={project.repo}
             />
-          )
+          );
         })
       }
     </div>

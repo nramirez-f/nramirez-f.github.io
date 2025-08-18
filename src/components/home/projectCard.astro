@@ -1,9 +1,9 @@
 ---
-const { name, description, url, image } = Astro.props;
+const { name, description, image, repo } = Astro.props;
 ---
 
 <a
-  href={url}
+  href={`/projects/${repo}`}
   class="relative flex flex-col items-stretch duration-300 ease-out p-7 sm:p-3 group h-100 rounded-2xl"
 >
   <span
@@ -16,7 +16,7 @@ const { name, description, url, image } = Astro.props;
     class="relative z-30 block duration-300 ease-out group-hover:-translate-x-1 group-hover:-translate-y-1"
   >
     <span class="block w-full">
-      <img src={image} class="w-full h-auto rounded-lg aspect-[16/9]" />
+      <img src={image} class="w-full h-auto object-contain rounded-lg aspect-[16/9]" />
     </span>
     <span class="block w-full px-1 mt-5 mb-1 sm:mt-3">
       <span

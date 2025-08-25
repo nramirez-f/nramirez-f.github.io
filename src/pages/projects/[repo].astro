@@ -64,7 +64,68 @@ if (!res.ok) {
   throw new Error(`No se pudo cargar el README de ${repo}`);
 }
 const readme = await res.text();
-const html = marked(readme);
+let html: string = marked(readme) as string;
+
+// Post-process HTML to fix relative image URLs in direct HTML img tags
+html = html.replace(/<img([^>]+)src=["']([^"']+)["']([^>]*)>/g, (match: string, beforeSrc: string, src: string, afterSrc: string) => {
+  let absoluteSrc = src;
+  
+  // Check if the URL is relative (doesn't start with http/https)
+  if (src && typeof src === 'string' && !src.startsWith('http://') && !src.startsWith('https://')) {
+    // Remove leading ./ if present
+    const cleanSrc = src.startsWith('./') ? src.slice(2) : src;
+    absoluteSrc = `${url}${cleanSrc}`;
+  }
+  
+  return `<img${beforeSrc}src="${absoluteSrc}"${afterSrc}>`;
+});
+
+// Post-process HTML to fix relative link URLs in direct HTML a tags
+html = html.replace(/<a([^>]+)href=["']([^"']+)["']([^>]*)>/g, (match: string, beforeHref: string, href: string, afterHref: string) => {
+  let absoluteHref = href;
+  
+  // Check if the URL is relative (doesn't start with http/https or #)
+  if (href && typeof href === 'string' && !href.startsWith('http://') && !href.startsWith('https://') && !href.startsWith('#')) {
+    // Remove leading ./ if present
+    const cleanHref = href.startsWith('./') ? href.slice(2) : href;
+    absoluteHref = `${repo_url}/blob/main/${cleanHref}`;
+  }
+  
+  return `<a${beforeHref}href="${absoluteHref}"${afterHref}>`;
+});
+
+// Post-process HTML to add IDs to headings for anchor links to work
+html = html.replace(/<h([1-6])([^>]*)>([^<]+)<\/h([1-6])>/g, (match: string, level: string, attrs: string, text: string, endLevel: string) => {
+  // Generate ID from heading text (similar to GitHub's approach)
+  const id = text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, '') // Remove special characters except hyphens
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+    .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+  
+  // Check if ID attribute already exists
+  const hasId = attrs.includes('id=');
+  const idAttr = hasId ? '' : ` id="${id}"`;
+  
+  return `<h${level}${attrs}${idAttr}>${text}</h${endLevel}>`;
+});
+
+// Post-process HTML to convert markdown image syntax within links to proper img tags
+html = html.replace(/<a([^>]*)>!\[([^\]]*)\]\(([^)]+)\)<\/a>/g, (match: string, linkAttrs: string, altText: string, imgSrc: string) => {
+  let absoluteImgSrc = imgSrc;
+  
+  // Check if the image URL is relative (doesn't start with http/https)
+  if (imgSrc && typeof imgSrc === 'string' && !imgSrc.startsWith('http://') && !imgSrc.startsWith('https://')) {
+    // Remove leading ./ if present
+    const cleanSrc = imgSrc.startsWith('./') ? imgSrc.slice(2) : imgSrc;
+    absoluteImgSrc = `${url}${cleanSrc}`;
+  }
+  
+  return `<a${linkAttrs}><img src="${absoluteImgSrc}" alt="${altText}"></a>`;
+});
+
 console.log(html);
 ---
 
@@ -79,3 +140,9 @@ console.log(html);
     <div class="markdown mt-20" set:html={html} />
   </section>
 </Layout>
+
+<style is:global>
+  .prose img {
+    border-radius: 0 !important;
+  }
+</style>

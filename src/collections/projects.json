@@ -3,5 +3,10 @@
 		"name": "Lid Driven Cavity",
 		"description": "The purpose of this project is to implement a Navier-Stokes code for simulate fluids",
 		"repo": "Lid-Driven-Cavity"
+	},
+	{
+		"name": "Libft",
+		"description": "42 version of some standard C library functions",
+		"repo": "Libft"
 	}
 ]

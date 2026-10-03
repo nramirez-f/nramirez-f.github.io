@@ -1,0 +1,49 @@
+# Talks I have given (I am the presenter). Newest dates are shown first
+# automatically, so the order here does not matter.
+# Fields: title, event, eventUrl?, city, country, coords [lat, lon] (star on
+# the map), start, end?, scope (national | international), authors (full
+# list), slides? (/talks/x.pdf inside public/), video?
+
+hyp-2026:
+  title: An all-Froude semi-implicit solver for two-dimensional shallow-water
+  event: HYP2026 – 20th International Conference on Hyperbolic Problems. Theory, Numerics and Applications
+  city: Stuttgart
+  country: { es: Alemania, en: Germany }
+  coords: [48.78, 9.18]
+  start: 2026-05-25
+  end: 2026-05-29
+  scope: international
+  authors: [J. I. Ramírez-Fuentes, M. L. Muñoz-Ruiz, C. Escalante, T. Morales de Luna]
+
+jaca-2026:
+  title: A Pressure-Transport Splitting Relaxation Method for Two-Dimensional Shallow-Water Model
+  event: XVIII Zaragoza–Pau Conference on Mathematics and its Applications
+  city: Jaca
+  country: { es: España, en: Spain }
+  coords: [42.57, -0.55]
+  start: 2026-06-10
+  end: 2026-06-12
+  scope: international
+  authors: [J. I. Ramírez-Fuentes, M. L. Muñoz-Ruiz, C. Escalante, T. Morales de Luna]
+
+cedya-2026:
+  title: A Split-Step Semi-Implicit Scheme for 2D Shallow Water Model
+  event: XXIX CEDYA / XIX CMA – Congreso de Ecuaciones Diferenciales y Aplicaciones / Congreso de Matemática Aplicada
+  city: { es: València, en: Valencia }
+  country: { es: España, en: Spain }
+  coords: [39.47, -0.38]
+  start: 2026-07-06
+  end: 2026-07-10
+  scope: national
+  authors: [J. I. Ramírez-Fuentes, M. L. Muñoz-Ruiz, C. Escalante, T. Morales de Luna]
+
+eccomas-2026:
+  title: A Semi-Implicit Finite Volume Relaxation Scheme for 2D Shallow-Water System
+  event: WCCM-ECCOMAS 2026 – 17th World Congress on Computational Mechanics & 10th European Congress on Computational Methods in Applied Sciences and Engineering
+  city: { es: Múnich, en: Munich }
+  country: { es: Alemania, en: Germany }
+  coords: [48.14, 11.58]
+  start: 2026-07-19
+  end: 2026-07-24
+  scope: international
+  authors: [J. I. Ramírez-Fuentes, M. L. Muñoz-Ruiz, C. Escalante, T. Morales de Luna]

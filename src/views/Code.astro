@@ -1,0 +1,163 @@
+---
+import { SITE } from '@/site.config';
+import type { Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const es = lang === 'es';
+
+const strings = {
+  loading: es ? 'Cargando repositorios…' : 'Loading repositories…',
+  empty: es ? 'Todavía no hay repositorios publicados.' : 'No repositories published yet.',
+  failed: es ? 'No se pudo consultar' : 'Could not reach',
+  updated: es ? 'actualizado' : 'updated',
+};
+---
+
+<p>
+  {
+    es
+      ? 'Software científico que desarrollo en abierto. La lista se obtiene automáticamente de mis cuentas, ordenada por actividad más reciente.'
+      : 'Scientific software I develop in the open. The list is fetched automatically from my accounts, most recently active first.'
+  }
+</p>
+<p class="mt-2">
+  <a href={`https://github.com/${SITE.github}`}>GitHub</a>{' & '}<a href={`https://gitlab.com/${SITE.gitlab}`}>GitLab</a>:{' '}
+  <span class="font-mono">@{SITE.github}</span>
+</p>
+
+<div
+  id="repos"
+  class="mt-8"
+  data-github={SITE.github}
+  data-gitlab={SITE.gitlab}
+  data-topic={SITE.codeTopic}
+  data-lang={lang}
+  data-strings={JSON.stringify(strings)}
+>
+  <p class="text-ink-soft" data-status>{strings.loading}</p>
+  <ul class="entries" data-list></ul>
+</div>
+<noscript>
+  <p class="text-ink-soft">
+    {es ? 'Activa JavaScript para ver la lista, o visita mis perfiles.' : 'Enable JavaScript to see the list, or visit my profiles.'}
+  </p>
+</noscript>
+
+<script>
+  // Repositories are fetched in the browser from the public GitHub and
+  // GitLab APIs, filtered by topic and merged by last activity. Responses
+  // are cached in sessionStorage to stay well below GitHub's 60 req/h limit
+  // for anonymous clients.
+  interface Repo {
+    name: string;
+    description: string;
+    url: string;
+    host: 'GitHub' | 'GitLab';
+    language: string | null;
+    updatedAt: string;
+  }
+
+  const CACHE_MINUTES = 30;
+  const root = document.getElementById('repos')!;
+  const { github, gitlab, topic, lang } = root.dataset;
+  const t = JSON.parse(root.dataset.strings!);
+  const status = root.querySelector<HTMLElement>('[data-status]')!;
+  const list = root.querySelector<HTMLUListElement>('[data-list]')!;
+
+  async function cached<T>(key: string, load: () => Promise<T>): Promise<T> {
+    try {
+      const hit = JSON.parse(sessionStorage.getItem(key) ?? 'null');
+      if (hit && Date.now() - hit.at < CACHE_MINUTES * 60_000) return hit.data;
+    } catch {}
+    const data = await load();
+    try {
+      sessionStorage.setItem(key, JSON.stringify({ at: Date.now(), data }));
+    } catch {}
+    return data;
+  }
+
+  async function getJson(url: string) {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`${res.status} ${url}`);
+    return res.json();
+  }
+
+  async function fromGitHub(): Promise<Repo[]> {
+    const repos = await getJson(`https://api.github.com/users/${github}/repos?per_page=100&sort=pushed`);
+    return repos
+      .filter((r: any) => !r.fork && !r.archived && r.topics?.includes(topic))
+      .map((r: any) => ({
+        name: r.name,
+        description: r.description ?? '',
+        url: r.html_url,
+        host: 'GitHub',
+        language: r.language,
+        updatedAt: r.pushed_at,
+      }));
+  }
+
+  async function fromGitLab(): Promise<Repo[]> {
+    const repos = await getJson(
+      `https://gitlab.com/api/v4/users/${gitlab}/projects?per_page=100&order_by=last_activity_at&archived=false`,
+    );
+    return repos
+      .filter((r: any) => (r.topics ?? r.tag_list ?? []).includes(topic))
+      .map((r: any) => ({
+        name: r.name,
+        description: r.description ?? '',
+        url: r.web_url,
+        host: 'GitLab',
+        language: null,
+        updatedAt: r.last_activity_at,
+      }));
+  }
+
+  function render(repos: Repo[], failed: string[]) {
+    const fmt = new Intl.DateTimeFormat(lang === 'es' ? 'es-ES' : 'en-GB', { dateStyle: 'medium' });
+    list.replaceChildren(
+      ...repos.map((r) => {
+        const li = document.createElement('li');
+        li.className = 'entry';
+        const when = document.createElement('span');
+        when.className = 'entry-when';
+        when.textContent = fmt.format(new Date(r.updatedAt));
+        when.title = t.updated;
+        const body = document.createElement('div');
+        const link = document.createElement('a');
+        link.href = r.url;
+        link.className = 'font-bold';
+        link.textContent = r.name;
+        const tag = document.createElement('span');
+        tag.className = 'tag ml-2';
+        tag.textContent = [r.host, r.language].filter(Boolean).join(' · ');
+        body.append(link, tag);
+        if (r.description) {
+          const desc = document.createElement('span');
+          desc.className = 'text-ink-soft block';
+          desc.textContent = r.description;
+          body.append(desc);
+        }
+        li.append(when, body);
+        return li;
+      }),
+    );
+    const notes = failed.map((host) => `${t.failed} ${host}.`);
+    if (repos.length === 0 && failed.length === 0) notes.push(t.empty);
+    status.textContent = notes.join(' ');
+    status.hidden = notes.length === 0;
+  }
+
+  const sources = [
+    { host: 'GitHub', load: () => cached(`repos:gh:${github}:${topic}`, fromGitHub) },
+    { host: 'GitLab', load: () => cached(`repos:gl:${gitlab}:${topic}`, fromGitLab) },
+  ];
+  const results = await Promise.allSettled(sources.map((s) => s.load()));
+  const repos = results
+    .flatMap((r) => (r.status === 'fulfilled' ? r.value : []))
+    .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  const failed = sources.filter((_, i) => results[i].status === 'rejected').map((s) => s.host);
+  render(repos, failed);
+</script>

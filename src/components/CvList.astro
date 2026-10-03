@@ -1,0 +1,23 @@
+---
+import Entry from '@/components/Entry.astro';
+import type { CvItem } from '@/data/cv';
+import { l, type Lang } from '@/i18n';
+
+interface Props {
+  items: CvItem[];
+  lang: Lang;
+}
+const { items, lang } = Astro.props;
+---
+
+<ul class="entries">
+  {
+    items.map((it) => (
+      <Entry when={l(it.when, lang)}>
+        <span>{it.url ? <a href={it.url}>{l(it.what, lang)}</a> : l(it.what, lang)}</span>
+        {it.where && <span class="text-ink-soft">. {l(it.where, lang)}</span>}
+        {it.detail && <span class="block text-[0.95rem]">{l(it.detail, lang)}</span>}
+      </Entry>
+    ))
+  }
+</ul>

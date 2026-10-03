@@ -1,0 +1,10 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { UI } from '@/i18n';
+---
+
+<BaseLayout title="404" lang="es" noindex>
+  <h1 class="mb-4 text-[1.7rem]">404</h1>
+  <p>{UI.es.notFound} <a href="/">{UI.es.backHome}</a>.</p>
+  <p lang="en" class="text-ink-soft mt-2">{UI.en.notFound} <a href="/en/">{UI.en.backHome}</a>.</p>
+</BaseLayout>

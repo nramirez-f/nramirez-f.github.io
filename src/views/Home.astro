@@ -1,0 +1,118 @@
+---
+import Section from '@/components/Section.astro';
+import Entry from '@/components/Entry.astro';
+import { SITE } from '@/site.config';
+import { getTalks, getPublications } from '@/lib/data';
+import { ROUTES, UI, l, formatDate, type Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const ui = UI[lang];
+
+const [talks, pubs] = await Promise.all([getTalks(), getPublications()]);
+const news = [
+  ...talks.map((t) => ({
+    date: t.data.start,
+    text: `${ui.talkAt} ${l(t.data.event, lang).split(' – ')[0]} (${l(t.data.city, lang)}): «${t.data.title}».`,
+    href: ROUTES.talks[lang],
+  })),
+  ...pubs.map((p) => ({
+    date: new Date(Date.UTC(p.data.year, 0, 1)),
+    text: `${p.data.status === 'published' ? (lang === 'es' ? 'Publicado' : 'Published') : lang === 'es' ? 'Nuevo preprint' : 'New preprint'}: «${p.data.title}».`,
+    href: ROUTES.research[lang],
+  })),
+]
+  .sort((a, b) => b.date.valueOf() - a.date.valueOf())
+  .slice(0, 5);
+
+const interests =
+  lang === 'es'
+    ? [
+        'Sistemas hiperbólicos de leyes de balance.',
+        'Métodos de volúmenes finitos y esquemas bien equilibrados (well-balanced).',
+        'Esquemas semi-implícitos para el sistema de aguas someras bidimensional.',
+        'Modelización matemática de flujos geofísicos.',
+      ]
+    : [
+        'Hyperbolic systems of balance laws.',
+        'Finite volume methods and well-balanced schemes.',
+        'Semi-implicit schemes for the two-dimensional shallow-water system.',
+        'Mathematical modelling of geophysical flows.',
+      ];
+
+const [d1, d2] = SITE.advisors;
+const tutor = SITE.tutor;
+---
+
+<div class="space-y-4">
+  {
+    lang === 'es' ? (
+      <>
+        <p>
+          Soy doctorando del <a href={SITE.phd.url}>{l(SITE.phd.program, lang)}</a> de la Universidad de
+          Málaga desde {SITE.phd.start} y miembro del grupo de investigación{' '}
+          <a href={SITE.group.url}>{SITE.group.name}</a>. Mi tesis está dirigida por{' '}
+          <a href={d1.url}>{d1.name}</a> y <a href={d2.url}>{d2.name}</a>, con{' '}
+          <a href={tutor.url}>{tutor.name}</a> como tutor.
+        </p>
+        <p>
+          Mi investigación se centra en métodos de volúmenes finitos bien equilibrados para sistemas
+          hiperbólicos bidimensionales con aplicaciones en dinámica de fluidos. Actualmente trabajo en el
+          desarrollo de un esquema semi-implícito para el sistema de aguas someras (<em>Shallow-Water</em>)
+          en dos dimensiones.
+        </p>
+        <p>
+          Me gradué en Matemáticas en la Universidad de Málaga, donde también completé el Máster de
+          Profesorado y el Máster en Matemáticas, con un trabajo fin de máster
+          sobre las ecuaciones de Navier–Stokes. Antes de empezar el doctorado trabajé como investigador
+          contratado en EDANYA en proyectos de investigación europeos y nacionales. Desarrollo mi propio
+          software científico en Python y C++.
+        </p>
+      </>
+    ) : (
+      <>
+        <p>
+          I am a PhD student in the <a href={SITE.phd.url}>{l(SITE.phd.program, lang)}</a> at the University
+          of Málaga since {SITE.phd.start} and a member of the <a href={SITE.group.url}>{SITE.group.name}</a>{' '}
+          research group. My thesis is supervised by <a href={d1.url}>{d1.name}</a> and{' '}
+          <a href={d2.url}>{d2.name}</a>, with <a href={tutor.url}>{tutor.name}</a> as my tutor.
+        </p>
+        <p>
+          My research focuses on well-balanced finite volume methods for two-dimensional hyperbolic systems
+          with applications in fluid dynamics. I am currently developing a semi-implicit scheme for the
+          two-dimensional shallow-water system.
+        </p>
+        <p>
+          I graduated in Mathematics from the University of Málaga, where I also completed a Master in
+          Secondary Education Teaching and an MSc in Mathematics, with a master thesis on the
+          Navier–Stokes equations. Before starting my PhD I worked as research staff in EDANYA on European and
+          national research projects. I write my own scientific software in Python and C++.
+        </p>
+      </>
+    )
+  }
+</div>
+
+<Section title={ui.interests}>
+  <ul class="list-disc space-y-1 pl-6">
+    {interests.map((i) => <li>{i}</li>)}
+  </ul>
+</Section>
+
+{
+  news.length > 0 && (
+    <Section title={ui.news}>
+      <ul class="entries">
+        {news.map((n) => (
+          <Entry when={formatDate(n.date, lang, { month: 'short', year: 'numeric' })}>
+            <a href={n.href} class="text-ink no-underline hover:underline">
+              {n.text}
+            </a>
+          </Entry>
+        ))}
+      </ul>
+    </Section>
+  )
+}

@@ -31,3 +31,6 @@ Thumbs.db
 
 # Opt
 *.log
+
+# Python
+__pycache__/

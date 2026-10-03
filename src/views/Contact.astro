@@ -1,0 +1,56 @@
+---
+import { SITE, PROFILES } from '@/site.config';
+import { l, type Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const es = lang === 'es';
+---
+
+<dl class="grid gap-x-6 gap-y-3 sm:grid-cols-[9rem_1fr]">
+  <dt class="text-ink-soft">Email</dt>
+  <dd><a href={`mailto:${SITE.email}`} class="font-mono">{SITE.email}</a></dd>
+
+  <dt class="text-ink-soft">{es ? 'Afiliación' : 'Affiliation'}</dt>
+  <dd>
+    {l(SITE.department, lang)}<br />
+    {es ? 'Facultad de Ciencias' : 'Faculty of Science'}, {l(SITE.university, lang)}
+  </dd>
+
+  <dt class="text-ink-soft">{es ? 'Ubicación' : 'Location'}</dt>
+  <dd>{es ? 'Facultad de Ciencias' : 'Faculty of Science'} / {l(SITE.building, lang)}</dd>
+
+  <dt class="text-ink-soft">ORCID</dt>
+  <dd>
+    <a href={`https://orcid.org/${SITE.orcid}`} rel="me" class="font-mono text-[0.95rem]">https://orcid.org/{SITE.orcid}</a>
+  </dd>
+
+  <dt class="text-ink-soft">{es ? 'Grupo' : 'Group'}</dt>
+  <dd>
+    <a href={SITE.group.url}>{SITE.group.name}</a> ({SITE.group.code}) — {l(SITE.group.fullName, lang)}
+  </dd>
+
+  <dt class="text-ink-soft">{es ? 'Perfiles' : 'Profiles'}</dt>
+  <dd>
+    {
+      PROFILES.filter((p) => p.label !== 'ORCID').map((p, i) => (
+        <>
+          {i > 0 && ' · '}
+          <a href={p.href} rel="me">
+            {p.label}
+          </a>
+        </>
+      ))
+    }
+  </dd>
+</dl>
+
+<p class="text-ink-soft mt-8">
+  {
+    es
+      ? 'Para colaboraciones, charlas o cualquier consulta sobre mi trabajo, escríbeme por correo electrónico.'
+      : 'For collaborations, talks or any question about my work, please write me an email.'
+  }
+</p>

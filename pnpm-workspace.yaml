@@ -1,4 +1,5 @@
-ignoredBuiltDependencies:
-  - '@biomejs/biome'
-  - esbuild
-  - sharp
+packages:
+  - '.'
+
+allowBuilds:
+  esbuild: true

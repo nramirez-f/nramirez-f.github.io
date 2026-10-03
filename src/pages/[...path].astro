@@ -1,0 +1,39 @@
+---
+// One dynamic route generates every page in both languages from ROUTES
+// (src/i18n.ts): /investigacion/ and /en/research/ render the same view.
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Home from '@/views/Home.astro';
+import Research from '@/views/Research.astro';
+import Talks from '@/views/Talks.astro';
+import Code from '@/views/Code.astro';
+import Teaching from '@/views/Teaching.astro';
+import Outreach from '@/views/Outreach.astro';
+import Cv from '@/views/Cv.astro';
+import Contact from '@/views/Contact.astro';
+import { SITE } from '@/site.config';
+import { LANGS, PAGES, ROUTES, NAV_LABELS, DESCRIPTIONS, type Lang, type PageKey } from '@/i18n';
+
+export const getStaticPaths = (() =>
+  PAGES.flatMap((page) =>
+    LANGS.map((lang) => ({
+      params: { path: ROUTES[page][lang].replace(/^\/|\/$/g, '') || undefined },
+      props: { page, lang },
+    })),
+  )) satisfies GetStaticPaths;
+
+interface Props {
+  page: PageKey;
+  lang: Lang;
+}
+const { page, lang } = Astro.props;
+
+const VIEWS = { home: Home, research: Research, talks: Talks, code: Code, teaching: Teaching, outreach: Outreach, cv: Cv, contact: Contact };
+const View = VIEWS[page];
+const title = page === 'home' ? SITE.name : NAV_LABELS[page][lang];
+---
+
+<BaseLayout title={title} description={DESCRIPTIONS[page][lang]} lang={lang} page={page}>
+  {page !== 'home' && <h1 class="mb-6 text-[1.7rem]">{title}</h1>}
+  <View lang={lang} />
+</BaseLayout>

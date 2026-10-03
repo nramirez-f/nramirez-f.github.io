@@ -1,0 +1,149 @@
+---
+// Inline-SVG version of the TikZ sketch of the shallow-water notation. The
+// coordinates are TikZ-style (y up); `smooth` replicates TikZ's
+// `plot [smooth, tension=0.7]`. Colours follow the theme, so the figure stays
+// legible in dark mode (a precompiled image could not).
+import type { Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+type Pt = readonly [number, number];
+const S = 64; // px per TikZ unit
+const X0 = -0.6;
+const X1 = 9.1;
+const Y0 = -0.45;
+const Y1 = 4.4;
+const px = ([x, y]: Pt) => `${((x - X0) * S).toFixed(1)},${((Y1 - y) * S).toFixed(1)}`;
+const at = (p: Pt) => {
+  const [x, y] = px(p).split(',').map(Number);
+  return { x, y };
+};
+
+/** Cubic Bézier through the points, as TikZ's `smooth` plot handler. */
+function smooth(points: Pt[], tension = 0.7) {
+  const k = tension * 0.2775;
+  const ctrl = (i: number, sign: 1 | -1): Pt => {
+    const prev = points[i - 1];
+    const next = points[i + 1];
+    if (!prev || !next) return points[i];
+    return [points[i][0] + sign * k * (next[0] - prev[0]), points[i][1] + sign * k * (next[1] - prev[1])];
+  };
+  let d = `M${px(points[0])}`;
+  for (let i = 0; i < points.length - 1; i++) {
+    d += ` C${px(ctrl(i, 1))} ${px(ctrl(i + 1, -1))} ${px(points[i + 1])}`;
+  }
+  return d;
+}
+
+const XR = 7.6; // right end of the water column
+const surface: Pt[] = [[0, 3.3], [1.5, 2.6], [3, 3.5], [4.5, 2.8], [6.1, 3.35], [XR, 3.05]];
+const bottom: Pt[] = [[0, 0.8], [1.5, 0.7], [3, 0.9], [4.5, 0.7], [6.1, 0.85], [XR, 0.75]];
+const close = ` L${px([XR, 0])} L${px([0, 0])} Z`;
+
+const line = (a: Pt, b: Pt) => ({ x1: at(a).x, y1: at(a).y, x2: at(b).x, y2: at(b).y });
+const label = (p: Pt) => at(p);
+---
+
+<figure class="sw-figure my-8">
+  <svg
+    viewBox={`0 0 ${((X1 - X0) * S).toFixed(0)} ${((Y1 - Y0) * S).toFixed(0)}`}
+    class="block h-auto w-full"
+    role="img"
+    aria-label={lang === 'es'
+      ? 'Esquema del sistema de aguas someras: lámina de agua de espesor h sobre un fondo a profundidad H bajo el nivel de referencia, con velocidad u.'
+      : 'Sketch of the shallow-water system: a water layer of thickness h over a bottom at depth H below the reference level, with velocity u.'}
+  >
+    <defs>
+      <marker id="sw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+        <path d="M0,1.5 L10,5 L0,8.5 L2.5,5 Z" class="sw-ink-fill" />
+      </marker>
+    </defs>
+
+    <path d={smooth(surface) + close} class="sw-water" />
+    <path d={smooth(bottom) + close} class="sw-bed" />
+
+    <line {...line([0, 0], [XR + 0.6, 0])} class="sw-axis" marker-end="url(#sw-arrow)" />
+    <line {...line([0, 0], [0, 4])} class="sw-axis" marker-end="url(#sw-arrow)" />
+    <line {...line([0, 3], [XR + 0.25, 3])} class="sw-ref" />
+
+    <path d={smooth(bottom)} class="sw-bed-line" />
+    <path d={smooth(surface)} class="sw-surface-line" />
+
+    <line {...line([1.5, 3], [1.5, 0.7])} class="sw-note" marker-end="url(#sw-arrow)" />
+    <line {...line([3, 0.9], [3, 3.5])} class="sw-note" marker-end="url(#sw-arrow)" />
+    <line {...line([4.6, 1.7], [5.8, 1.7])} class="sw-note" marker-end="url(#sw-arrow)" />
+
+    <g class="sw-label">
+      <text {...label([1.38, 1.85])} text-anchor="end" dominant-baseline="middle">H</text>
+      <text {...label([2.88, 2.2])} text-anchor="end" dominant-baseline="middle">h</text>
+      <text {...label([5.2, 1.84])} text-anchor="middle">u</text>
+      <text {...label([XR + 0.65, -0.12])} dominant-baseline="hanging">x</text>
+      <text {...label([-0.1, 4.05])} text-anchor="end">z</text>
+      <text {...label([XR + 0.35, 3])} dominant-baseline="middle" class="sw-soft">ref.</text>
+    </g>
+  </svg>
+</figure>
+
+<style>
+  .sw-figure {
+    --sw-water: #dceaf7; /* pastel blue */
+    --sw-bed: #efe3d5;
+    --sw-surface: #3a6ea5;
+    --sw-bed-line: #7a5a3a;
+    --sw-ref: #8a8a8f;
+  }
+  :global(.dark) .sw-figure {
+    --sw-water: rgb(140 180 225 / 0.16);
+    --sw-bed: rgb(191 150 110 / 0.2);
+    --sw-surface: #8db4ec;
+    --sw-bed-line: #c4a07c;
+    --sw-ref: #8a8c94;
+  }
+  .sw-water {
+    fill: var(--sw-water);
+  }
+  .sw-bed {
+    fill: var(--sw-bed);
+  }
+  .sw-surface-line,
+  .sw-bed-line {
+    fill: none;
+    stroke-width: 1.5;
+  }
+  .sw-surface-line {
+    stroke: var(--sw-surface);
+  }
+  .sw-bed-line {
+    stroke: var(--sw-bed-line);
+  }
+  .sw-axis {
+    stroke: var(--color-ink);
+    stroke-width: 1.2;
+  }
+  .sw-ref {
+    stroke: var(--sw-ref);
+    stroke-width: 1;
+    stroke-dasharray: 6 5;
+  }
+  .sw-note {
+    stroke: var(--color-ink);
+    stroke-width: 1;
+  }
+  .sw-ink-fill {
+    fill: var(--color-ink);
+  }
+  .sw-label {
+    fill: var(--color-ink);
+    font-family: var(--font-serif);
+    font-size: 21px;
+    font-style: italic;
+  }
+  .sw-soft {
+    fill: var(--sw-ref);
+    font-style: normal;
+    font-size: 16px;
+  }
+</style>

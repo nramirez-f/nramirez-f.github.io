@@ -1,0 +1,12 @@
+---
+// One row of a dense chronological list: date column + content.
+interface Props {
+  when?: string;
+}
+const { when } = Astro.props;
+---
+
+<li class="entry">
+  <span class="entry-when">{when}</span>
+  <div><slot /></div>
+</li>

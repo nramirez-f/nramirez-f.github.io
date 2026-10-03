@@ -1,0 +1,31 @@
+---
+import Section from '@/components/Section.astro';
+import { JEMA_URL } from '@/data/cv';
+import type { Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const es = lang === 'es';
+---
+
+<Section title={es ? 'Seminarios JEMA' : 'JEMA Seminars'}>
+  <p>
+    {
+      es ? (
+        <>
+          Desde 2026 soy co-organizador de los <a href={JEMA_URL}>Seminarios JEMA</a> de la Sociedad Española
+          de Matemática Aplicada (SEMA): sesiones mensuales en línea en las que jóvenes investigadores presentan
+          su trabajo en matemática aplicada y crean red con otros grupos.
+        </>
+      ) : (
+        <>
+          Since 2026 I co-organise the <a href={JEMA_URL}>JEMA Seminars</a> of the Spanish Society of Applied
+          Mathematics (SEMA): monthly online sessions where early-career researchers present their work in
+          applied mathematics and connect with other groups.
+        </>
+      )
+    }
+  </p>
+</Section>

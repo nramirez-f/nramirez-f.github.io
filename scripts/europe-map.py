@@ -14,14 +14,14 @@ import json
 import math
 import sys
 
-LON_MIN, LON_MAX = -11.0, 30.0
-LAT_MIN, LAT_MAX = 34.5, 60.0
-WIDTH = 600
+LON_MIN, LON_MAX = -10.0, 20.0
+LAT_MIN, LAT_MAX = 35.5, 51.0
+WIDTH = 800
 COS = math.cos(math.radians((LAT_MIN + LAT_MAX) / 2))
 K = WIDTH / ((LON_MAX - LON_MIN) * COS)
 HEIGHT = round((LAT_MAX - LAT_MIN) * K)
 PAD = 25  # clip outside the visible box so artificial clip edges stay hidden
-TOLERANCE = 0.8  # Douglas–Peucker tolerance, in SVG units
+TOLERANCE = 0.7  # Douglas–Peucker tolerance, in SVG units
 
 
 def project(lon, lat):

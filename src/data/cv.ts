@@ -4,7 +4,7 @@
 import type { Localized } from '@/i18n';
 
 export interface CvItem {
-  when: Localized; // free text: "2025", "2024 – 2025", { es: '2025 – en curso', … }
+  when: Localized; // free text: "2025", "2024 – 2025", { es: '2025 – Actualidad', … }
   what: Localized;
   url?: string; // link on `what`
   where?: Localized;
@@ -13,7 +13,7 @@ export interface CvItem {
 
 export const EDUCATION: CvItem[] = [
   {
-    when: { es: '2025 – en curso', en: '2025 – present' },
+    when: { es: '2025 – Actualidad', en: '2025 – Present' },
     what: { es: 'Doctorado en Matemáticas', en: 'PhD in Mathematics' },
     url: 'https://www.uma.es/doctorado-matematicas/',
     where: { es: 'Universidad de Málaga', en: 'University of Málaga' },
@@ -52,7 +52,7 @@ export const EDUCATION: CvItem[] = [
 
 export const POSITIONS: CvItem[] = [
   {
-    when: { es: '2024 – actualidad', en: '2024 – present' },
+    when: { es: '2024 – Actualidad', en: '2024 – Present' },
     what: { es: 'Investigador contratado con cargo a proyectos', en: 'Research staff (project-funded)' },
     where: {
       es: 'Grupo EDANYA, Universidad de Málaga',
@@ -164,7 +164,7 @@ export const SEMINARS: { date: string; speaker: string; title: string }[] = [
 
 export const SERVICE: CvItem[] = [
   {
-    when: '2026 –',
+    when: { es: '2026 – Actualidad', en: '2026 – Present' },
     what: {
       es: 'Co-organizador de los Seminarios JEMA',
       en: 'Co-organiser of the JEMA Seminars',

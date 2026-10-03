@@ -1,5 +1,4 @@
 ---
-import OrcidIcon from '@/components/OrcidIcon.astro';
 import { SITE, PROFILES } from '@/site.config';
 import { l, type Lang } from '@/i18n';
 
@@ -20,12 +19,16 @@ const es = lang === 'es';
     {es ? 'Facultad de Ciencias' : 'Faculty of Science'}, {l(SITE.university, lang)}
   </dd>
 
+  <dt class="text-ink-soft">{es ? 'Ubicación' : 'Location'}</dt>
+  <dd>
+    {es ? 'Facultad de Ciencias o ' : 'Faculty of Science or '}
+    <a href={SITE.building.url}>{l(SITE.building.name, lang)}</a>
+    {es ? ' (Campus de Teatinos)' : ' (Teatinos Campus)'}
+  </dd>
+
   <dt class="text-ink-soft">ORCID</dt>
   <dd>
-    <a href={`https://orcid.org/${SITE.orcid}`} rel="me" class="inline-flex items-center gap-1.5">
-      <OrcidIcon class="h-5 w-5" />
-      <span class="font-mono text-[0.95rem]">https://orcid.org/{SITE.orcid}</span>
-    </a>
+    <a href={`https://orcid.org/${SITE.orcid}`} rel="me" class="font-mono text-[0.95rem]">https://orcid.org/{SITE.orcid}</a>
   </dd>
 
   <dt class="text-ink-soft">{es ? 'Grupo' : 'Group'}</dt>

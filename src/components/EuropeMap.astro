@@ -49,21 +49,21 @@ const caption =
     viewBox={`0 0 ${EUROPE.width} ${EUROPE.height}`}
     role="img"
     aria-label={`${caption} ${markers.map((m) => m.name).join(', ')}.`}
-    class="mx-auto block h-auto w-full max-w-[36rem]"
+    class="block h-auto w-full"
   >
     <path d={EUROPE.path} class="stroke-ink-soft fill-none" stroke-width="0.9" stroke-linejoin="round" />
 
     <g class="fill-ink-soft">
-      <circle cx={home.x} cy={home.y} r="3.5" />
-      <text x={home.x + 7} y={home.y + 17} font-size="16" class="font-serif italic">{home.name}</text>
+      <circle cx={home.x} cy={home.y} r="4.5" />
+      <text x={home.x + 8} y={home.y + 18} font-size="16" class="font-serif italic">{home.name}</text>
     </g>
 
     {
       markers.map((m) => (
         <g>
-          <polygon points={star(m.x, m.y)} class="fill-signal stroke-paper" stroke-width="1.2" />
+          <polygon points={star(m.x, m.y)} class="fill-ink stroke-paper" stroke-width="1.5" />
           <text
-            x={m.side === 'left' ? m.x - 15 : m.x + 15}
+            x={m.side === 'left' ? m.x - 16 : m.x + 16}
             y={m.y + 6}
             text-anchor={m.side === 'left' ? 'end' : 'start'}
             font-size="18"

@@ -1,0 +1,165 @@
+---
+// Inline-SVG port of the TikZ sketch of the shallow-water notation. The
+// coordinates are the TikZ ones (y up); `smooth` replicates TikZ's
+// `plot [smooth, tension=0.7]`. Colours follow the theme, so the figure stays
+// legible in dark mode (a precompiled image could not).
+import Tex from '@/components/Tex.astro';
+import type { Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+
+type Pt = readonly [number, number];
+const S = 72; // px per TikZ unit
+const X0 = -0.7;
+const Y1 = 4.45;
+const px = ([x, y]: Pt) => `${((x - X0) * S).toFixed(1)},${((Y1 - y) * S).toFixed(1)}`;
+
+/** Cubic Bézier through the points, as TikZ's `smooth` plot handler. */
+function smooth(points: Pt[], tension = 0.7) {
+  const k = tension * 0.2775 * 2;
+  const ctrl = (i: number, sign: 1 | -1): Pt => {
+    const prev = points[i - 1];
+    const next = points[i + 1];
+    if (!prev || !next) return points[i];
+    return [points[i][0] + (sign * k * (next[0] - prev[0])) / 2, points[i][1] + (sign * k * (next[1] - prev[1])) / 2];
+  };
+  let d = `M${px(points[0])}`;
+  for (let i = 0; i < points.length - 1; i++) {
+    d += ` C${px(ctrl(i, 1))} ${px(ctrl(i + 1, -1))} ${px(points[i + 1])}`;
+  }
+  return d;
+}
+
+const surface: Pt[] = [[0, 3.3], [1, 2.6], [2, 3.5], [3, 2.8], [4.5, 3.2]];
+const bottom: Pt[] = [[0, 0.8], [1, 0.7], [2, 0.9], [3, 0.7], [4.5, 0.8]];
+const close = ` L${px([4.5, 0])} L${px([0, 0])} Z`;
+
+const width = (5.75 - X0) * S;
+const height = (Y1 + 0.45) * S;
+
+const at = (p: Pt) => {
+  const [x, y] = px(p).split(',').map(Number);
+  return { x, y };
+};
+const lblH = at([0.88, 1.85]);
+const lblh = at([1.88, 2.2]);
+const lblu = at([3.5, 1.82]);
+const lblx = at([5.05, -0.12]);
+const lblz = at([-0.1, 4.05]);
+const lblref = at([4.78, 3]);
+---
+
+<figure class="sw-figure my-6">
+  <svg viewBox={`0 0 ${width.toFixed(0)} ${height.toFixed(0)}`} class="mx-auto block h-auto w-full max-w-[30rem]" role="img"
+    aria-label={lang === 'es'
+      ? 'Esquema del sistema de aguas someras: lámina de agua de espesor h sobre un fondo a profundidad H bajo el nivel de referencia, con velocidad u.'
+      : 'Sketch of the shallow-water system: a water layer of thickness h over a bottom at depth H below the reference level, with velocity u.'}>
+    <defs>
+      <marker id="sw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0,1 L10,5 L0,9 L2.5,5 Z" class="sw-ink-fill" />
+      </marker>
+    </defs>
+
+    <path d={smooth(surface) + close} class="sw-water" />
+    <path d={smooth(bottom) + close} class="sw-bed" />
+
+    <line x1={at([0, 0]).x} y1={at([0, 0]).y} x2={at([5, 0]).x} y2={at([5, 0]).y} class="sw-axis" marker-end="url(#sw-arrow)" />
+    <line x1={at([0, 0]).x} y1={at([0, 0]).y} x2={at([0, 4]).x} y2={at([0, 4]).y} class="sw-axis" marker-end="url(#sw-arrow)" />
+
+    <line x1={at([0, 3]).x} y1={at([0, 3]).y} x2={at([4.7, 3]).x} y2={at([4.7, 3]).y} class="sw-ref" />
+
+    <path d={smooth(bottom)} class="sw-bed-line" />
+    <path d={smooth(surface)} class="sw-surface-line" />
+
+    <line x1={at([1, 3]).x} y1={at([1, 3]).y} x2={at([1, 0.7]).x} y2={at([1, 0.7]).y} class="sw-note" marker-end="url(#sw-arrow)" />
+    <line x1={at([2, 0.9]).x} y1={at([2, 0.9]).y} x2={at([2, 3.5]).x} y2={at([2, 3.5]).y} class="sw-note" marker-end="url(#sw-arrow)" />
+    <line x1={at([3, 1.7]).x} y1={at([3, 1.7]).y} x2={at([4, 1.7]).x} y2={at([4, 1.7]).y} class="sw-note" marker-end="url(#sw-arrow)" />
+
+    <g class="sw-label">
+      <text x={lblH.x} y={lblH.y} text-anchor="end" dominant-baseline="middle" font-style="italic">H</text>
+      <text x={lblh.x} y={lblh.y} text-anchor="end" dominant-baseline="middle" font-style="italic">h</text>
+      <text x={lblu.x} y={lblu.y} text-anchor="middle" font-style="italic">u</text>
+      <text x={lblx.x} y={lblx.y} dominant-baseline="hanging" font-style="italic">x</text>
+      <text x={lblz.x} y={lblz.y} text-anchor="end" font-style="italic">z</text>
+      <text x={lblref.x} y={lblref.y} dominant-baseline="middle" font-size="17" class="sw-soft">ref.</text>
+    </g>
+  </svg>
+  <figcaption class="text-ink-soft mx-auto mt-2 max-w-[36rem] text-center text-[0.9rem]">
+    {
+      lang === 'es' ? (
+        <>
+          Figura 1. Notación del sistema: <Tex tex="h" /> es el espesor de la lámina de agua, <Tex tex="H" /> la
+          profundidad del fondo bajo el nivel de referencia y <Tex tex="u" /> la velocidad.
+        </>
+      ) : (
+        <>
+          Figure 1. Notation: <Tex tex="h" /> is the water depth, <Tex tex="H" /> the depth of the bottom below
+          the reference level and <Tex tex="u" /> the velocity.
+        </>
+      )
+    }
+  </figcaption>
+</figure>
+
+<style>
+  .sw-figure {
+    /* TikZ colours: cyan!20, brown!30, blue!70!black, brown!50!black, black!60 */
+    --sw-water: #ccffff;
+    --sw-bed: #ecd9c6;
+    --sw-surface: #0000b3;
+    --sw-bed-line: #603f20;
+    --sw-ref: #666666;
+  }
+  :global(.dark) .sw-figure {
+    --sw-water: rgb(64 190 230 / 0.16);
+    --sw-bed: rgb(191 128 64 / 0.24);
+    --sw-surface: #7fa6ff;
+    --sw-bed-line: #c99a6b;
+    --sw-ref: #9a9ca6;
+  }
+  .sw-water {
+    fill: var(--sw-water);
+  }
+  .sw-bed {
+    fill: var(--sw-bed);
+  }
+  .sw-surface-line,
+  .sw-bed-line {
+    fill: none;
+    stroke-width: 2.6;
+  }
+  .sw-surface-line {
+    stroke: var(--sw-surface);
+  }
+  .sw-bed-line {
+    stroke: var(--sw-bed-line);
+  }
+  .sw-axis {
+    stroke: var(--color-ink);
+    stroke-width: 2.2;
+  }
+  .sw-ref {
+    stroke: var(--sw-ref);
+    stroke-width: 1.4;
+    stroke-dasharray: 7 5;
+  }
+  .sw-note {
+    stroke: var(--color-ink);
+    stroke-width: 1.4;
+  }
+  .sw-ink-fill {
+    fill: var(--color-ink);
+  }
+  .sw-label {
+    fill: var(--color-ink);
+    font-family: var(--font-serif);
+    font-size: 22px;
+  }
+  .sw-soft {
+    fill: var(--sw-ref);
+    font-style: normal;
+  }
+</style>

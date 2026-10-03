@@ -1,5 +1,4 @@
 ---
-import OrcidIcon from '@/components/OrcidIcon.astro';
 import { SITE, PROFILES } from '@/site.config';
 import { l, type Lang } from '@/i18n';
 
@@ -20,7 +19,6 @@ const year = new Date().getFullYear();
         PROFILES.map((p) => (
           <li>
             <a href={p.href} rel="me" class="no-underline hover:underline">
-              {p.label === 'ORCID' && <OrcidIcon class="mr-1 h-3.5 w-3.5" />}
               {p.label}
             </a>
           </li>

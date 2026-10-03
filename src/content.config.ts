@@ -42,22 +42,6 @@ const teaching = defineCollection({
   }),
 });
 
-/** Papers and preprints. */
-const publications = defineCollection({
-  loader: file('src/data/publications.yaml'),
-  schema: z.object({
-    title: z.string(),
-    authors: z.array(z.string()),
-    status: z.enum(['published', 'accepted', 'submitted', 'preprint']),
-    journal: z.string().optional(),
-    year: z.number().int(),
-    doi: z.string().optional(),
-    arxiv: z.string().optional(), // arXiv id, e.g. 2601.01234
-    hal: z.string().optional(),
-    bibtex: z.string().optional(),
-  }),
-});
-
 /** Funded research projects I take part in. */
 const projects = defineCollection({
   loader: file('src/data/projects.yaml'),
@@ -74,4 +58,4 @@ const projects = defineCollection({
   }),
 });
 
-export const collections = { talks, teaching, publications, projects };
+export const collections = { talks, teaching, projects };

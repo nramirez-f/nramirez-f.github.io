@@ -1,10 +1,10 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+import type { Publication } from '@/data/publications';
 import Entry from '@/components/Entry.astro';
 import { UI, type Lang } from '@/i18n';
 
 interface Props {
-  pub: CollectionEntry<'publications'>;
+  pub: Publication;
   lang: Lang;
 }
 const { pub, lang } = Astro.props;

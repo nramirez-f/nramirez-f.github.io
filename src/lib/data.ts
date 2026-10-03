@@ -1,4 +1,5 @@
 import { getCollection } from 'astro:content';
+import { PUBLICATIONS } from '@/data/publications';
 
 /** Talks, newest first. */
 export async function getTalks() {
@@ -24,8 +25,7 @@ export async function getTeachingByYear() {
 
 /** Publications, newest first. */
 export async function getPublications() {
-  const pubs = await getCollection('publications');
-  return pubs.sort((a, b) => b.data.year - a.data.year);
+  return [...PUBLICATIONS].sort((a, b) => b.data.year - a.data.year);
 }
 
 /** Projects, most recent end date first. */

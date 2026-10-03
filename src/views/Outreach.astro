@@ -1,0 +1,63 @@
+---
+import Section from '@/components/Section.astro';
+import { getVideos } from '@/lib/data';
+import { JEMA_URL } from '@/data/cv';
+import { l, formatDate, type Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const es = lang === 'es';
+const videos = await getVideos();
+---
+
+<Section title={es ? 'Seminarios JEMA' : 'JEMA Seminars'}>
+  <p>
+    {
+      es ? (
+        <>
+          Desde 2026 soy co-organizador de los <a href={JEMA_URL}>Seminarios JEMA</a> de la Sociedad Española
+          de Matemática Aplicada (SEMA): sesiones mensuales en línea en las que jóvenes investigadores presentan
+          su trabajo en matemática aplicada y crean red con otros grupos.
+        </>
+      ) : (
+        <>
+          Since 2026 I co-organise the <a href={JEMA_URL}>JEMA Seminars</a> of the Spanish Society of Applied
+          Mathematics (SEMA): monthly online sessions where early-career researchers present their work in
+          applied mathematics and connect with other groups.
+        </>
+      )
+    }
+  </p>
+  <p class="text-ink-soft mt-2">
+    {es ? 'La primera temporada empezará próximamente.' : 'The first season will start soon.'}
+  </p>
+</Section>
+
+<Section title={es ? 'Vídeos' : 'Videos'}>
+  {
+    videos.length === 0 ? (
+      <p class="text-ink-soft">{es ? 'Próximamente.' : 'Coming soon.'}</p>
+    ) : (
+      <ul class="space-y-8">
+        {videos.map((v) => (
+          <li>
+            <h3 class="text-lg">{l(v.data.title, lang)}</h3>
+            <p class="text-ink-soft text-sm">{formatDate(v.data.date, lang, { dateStyle: 'long' })}</p>
+            {v.data.description && <p class="mt-1">{l(v.data.description, lang)}</p>}
+            {/* Thumbnail link instead of an embed: nothing is loaded from YouTube until the reader clicks. */}
+            <a href={`https://www.youtube-nocookie.com/embed/${v.data.youtube}?autoplay=1`} class="mt-2 block">
+              <img
+                src={`https://i.ytimg.com/vi/${v.data.youtube}/hqdefault.jpg`}
+                alt={l(v.data.title, lang)}
+                loading="lazy"
+                class="border-line aspect-video w-full border object-cover"
+              />
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</Section>

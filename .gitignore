@@ -31,3 +31,6 @@ Thumbs.db
 
 # Opt
 *.log
+
+# Documentos personales (solo fuente local de datos, NUNCA publicar)
+meritos/

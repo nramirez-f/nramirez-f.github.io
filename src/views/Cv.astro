@@ -1,0 +1,173 @@
+---
+import Section from '@/components/Section.astro';
+import CvList from '@/components/CvList.astro';
+import TalkItem from '@/components/TalkItem.astro';
+import ProjectItem from '@/components/ProjectItem.astro';
+import PublicationItem from '@/components/PublicationItem.astro';
+import TeachingTable from '@/components/TeachingTable.astro';
+import { SITE } from '@/site.config';
+import { getTalks, getProjects, getPublications } from '@/lib/data';
+import {
+  EDUCATION,
+  POSITIONS,
+  OTHER_EXPERIENCE,
+  SCHOOLS,
+  CONFERENCES_ATTENDED,
+  COURSES,
+  SEMINARS,
+  SERVICE,
+  LANGUAGES,
+} from '@/data/cv';
+import { UI, l, formatDate, type Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const es = lang === 'es';
+const ui = UI[lang];
+
+const [talks, projects, pubs] = await Promise.all([getTalks(), getProjects(), getPublications()]);
+---
+
+<div class="flex flex-wrap items-center justify-between gap-3 print:hidden">
+  <p class="text-ink-soft">
+    {SITE.email} · {SITE.group.name}, {l(SITE.university, lang)}
+  </p>
+  {
+    SITE.cvPdf ? (
+      <a href={SITE.cvPdf} class="border-signal border px-3 py-1 no-underline hover:underline" download>
+        {ui.download}
+      </a>
+    ) : (
+      <button
+        type="button"
+        data-print
+        class="border-signal text-signal cursor-pointer border px-3 py-1 hover:underline"
+      >
+        {es ? 'Imprimir / guardar en PDF' : 'Print / save as PDF'}
+      </button>
+    )
+  }
+</div>
+
+<Section title={es ? 'Formación académica' : 'Education'}>
+  <CvList items={EDUCATION} lang={lang} />
+</Section>
+
+<Section title={es ? 'Experiencia investigadora' : 'Research positions'}>
+  <CvList items={POSITIONS} lang={lang} />
+</Section>
+
+<Section title={es ? 'Proyectos de investigación' : 'Research projects'}>
+  <ul class="entries">
+    {projects.map((p) => <ProjectItem project={p} lang={lang} compact />)}
+  </ul>
+</Section>
+
+{
+  pubs.length > 0 && (
+    <Section title={es ? 'Publicaciones' : 'Publications'}>
+      <ul class="entries">
+        {pubs.map((p) => (
+          <PublicationItem pub={p} lang={lang} />
+        ))}
+      </ul>
+    </Section>
+  )
+}
+
+<Section title={es ? 'Comunicaciones en congresos' : 'Conference talks'}>
+  <ul class="entries">
+    {talks.map((t) => <TalkItem talk={t} lang={lang} />)}
+  </ul>
+</Section>
+
+<Section title={es ? 'Docencia universitaria' : 'University teaching'}>
+  <TeachingTable lang={lang} />
+</Section>
+
+<Section title={es ? 'Formación complementaria' : 'Further training'}>
+  <h3 class="mb-2 text-lg">{es ? 'Escuelas y workshops' : 'Schools and workshops'}</h3>
+  <CvList items={SCHOOLS} lang={lang} />
+
+  <h3 class="mt-6 mb-2 text-lg">{es ? 'Asistencia a congresos' : 'Conferences attended'}</h3>
+  <CvList items={CONFERENCES_ATTENDED} lang={lang} />
+
+  <h3 class="mt-6 mb-2 text-lg">{es ? 'Cursos' : 'Courses'}</h3>
+  <CvList items={COURSES} lang={lang} />
+
+  <details class="mt-6">
+    <summary class="cursor-pointer text-lg font-bold">
+      {es ? `Seminarios del grupo EDANYA (${SEMINARS.length})` : `EDANYA group seminars (${SEMINARS.length})`}
+    </summary>
+    <ul class="entries mt-3 text-[0.95rem]">
+      {
+        SEMINARS.map((s) => (
+          <li class="entry">
+            <span class="entry-when">{formatDate(new Date(s.date), lang, { dateStyle: 'medium' })}</span>
+            <div>
+              {s.speaker}. <em>{s.title}</em>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </details>
+</Section>
+
+<Section title={es ? 'Servicio a la comunidad' : 'Service'}>
+  <CvList items={SERVICE} lang={lang} />
+</Section>
+
+<Section title={es ? 'Otra experiencia' : 'Other experience'}>
+  <CvList items={OTHER_EXPERIENCE} lang={lang} />
+</Section>
+
+<Section title={es ? 'Idiomas' : 'Languages'}>
+  <p>
+    {LANGUAGES.map((it) => `${l(it.what, lang)} (${it.detail ? l(it.detail, lang) : ''})`).join(' · ')}
+  </p>
+</Section>
+
+<script>
+  document.querySelector('[data-print]')?.addEventListener('click', () => window.print());
+</script>
+
+<style is:global>
+  @media print {
+    html {
+      font-size: 11pt;
+    }
+    body > header nav,
+    body > header [data-theme-toggle],
+    body > header a[hreflang],
+    body > footer,
+    a[href='#content'] {
+      display: none !important;
+    }
+    :root,
+    :root.dark {
+      color-scheme: light;
+      --paper: #fff;
+      --ink: #000;
+      --ink-soft: #333;
+      --signal: #000;
+      --line: #ccc;
+    }
+    /* Print the collapsed seminar list too. */
+    details > summary {
+      list-style: none;
+    }
+    details::details-content {
+      content-visibility: visible;
+      display: block;
+    }
+    details:not([open]) > :not(summary) {
+      display: grid !important;
+    }
+    section {
+      break-inside: avoid-page;
+    }
+  }
+</style>

@@ -1,0 +1,40 @@
+# Funded research projects I take part in (no budget figures on the web).
+
+geo-inquire:
+  acronym: Geo-INQUIRE
+  title: Geosphere INfrastructures for QUestions into Integrated REsearch
+  funder: { es: Comisión Europea – Horizon Europe, en: European Commission – Horizon Europe }
+  reference: '101058518'
+  pis: [J. Macías Sánchez (UMA)]
+  start: 2022-10-01
+  end: 2026-09-30
+  url: https://www.geo-inquire.eu/
+  summary:
+    es: Infraestructuras europeas de datos y servicios de geociencias; en la UMA, simulación de tsunamis y deslizamientos submarinos.
+    en: European geoscience data and service infrastructures; at UMA, simulation of tsunamis and submarine landslides.
+
+economia-azul:
+  title:
+    es: Inteligencia artificial aplicada a la ciencia del entorno litoral, la seguridad de los usuarios de playas y desarrollo de deportes náuticos para el impulso de la Economía Azul en Andalucía
+    en: Artificial intelligence applied to coastal environment science, beach-user safety and nautical sports to boost the Blue Economy in Andalusia
+  funder:
+    es: Plan Complementario de Ciencias Marinas – Plan de Recuperación, Transformación y Resiliencia (NextGenerationEU)
+    en: Complementary Plan for Marine Sciences – Recovery, Transformation and Resilience Plan (NextGenerationEU)
+  pis: [F. I. Franco Duro, J. Macías Sánchez]
+  start: 2023-01-01
+  end: 2025-09-30
+  summary:
+    es: Modelos de IA para la predicción de medusas, agregados flotantes y algas; web y aplicación móvil Oceanaria–Andalucía.
+    en: AI models to forecast jellyfish, floating aggregates and algae; Oceanaria–Andalucía website and mobile app.
+
+heu-tools:
+  acronym: HEU-tools
+  title:
+    es: Desarrollo de herramientas para la evaluación de riesgos, alerta temprana y computación eficiente para maremotos, flujos de lava y deslizamientos
+    en: Tools for risk assessment, early warning and efficient computing for tsunamis, lava flows and landslides
+  funder:
+    es: Ministerio de Ciencia e Innovación – Proyectos de Prueba de Concepto 2022
+    en: Spanish Ministry of Science and Innovation – Proof of Concept Projects 2022
+  pis: [M. J. Castro Díaz, C. Parés Madroñal]
+  start: 2022-12-01
+  end: 2024-11-30

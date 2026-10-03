@@ -1,0 +1,62 @@
+---
+import { getTeachingByYear } from '@/lib/data';
+import { l, UI, type Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const years = await getTeachingByYear();
+const ui = UI[lang];
+const h =
+  lang === 'es'
+    ? { subject: 'Asignatura', degree: 'Titulación', kind: 'Tipo', hours: 'Horas', credits: 'ECTS', theory: 'Teoría', practice: 'Prácticas', year: 'Curso', sem: 'semestre' }
+    : { subject: 'Subject', degree: 'Degree', kind: 'Type', hours: 'Hours', credits: 'ECTS', theory: 'Lectures', practice: 'Problem classes', year: 'Academic year', sem: 'semester' };
+---
+
+<div class="space-y-7">
+  {
+    years.map(({ year, items, hours }) => (
+      <div>
+        <h3 class="mb-1.5 text-lg">
+          {h.year} {year}
+        </h3>
+        <div class="overflow-x-auto">
+          <table class="w-full min-w-[34rem] table-fixed border-collapse text-[0.95rem]">
+            <thead>
+              <tr class="border-ink border-t border-b text-left">
+                <th class="w-[36%] py-1 pr-3 font-bold">{h.subject}</th>
+                <th class="w-[32%] py-1 pr-3 font-bold">{h.degree}</th>
+                <th class="w-[14%] py-1 pr-3 font-bold">{h.kind}</th>
+                <th class="w-[10%] py-1 pr-3 text-right font-bold">{h.hours}</th>
+                <th class="w-[8%] py-1 text-right font-bold">{h.credits}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.map((r) => (
+                <tr class="border-line border-b">
+                  <td class="py-1 pr-3">{l(r.data.subject, lang)}</td>
+                  <td class="text-ink-soft py-1 pr-3">{l(r.data.degree, lang)}</td>
+                  <td class="text-ink-soft py-1 pr-3">{r.data.kind === 'theory' ? h.theory : h.practice}</td>
+                  <td class="py-1 pr-3 text-right tabular-nums">{r.data.hours}</td>
+                  <td class="py-1 text-right tabular-nums">{r.data.credits ?? '—'}</td>
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              <tr class="border-ink border-b">
+                <td class="py-1 pr-3 font-bold" colspan="3">
+                  {ui.total}
+                </td>
+                <td class="py-1 pr-3 text-right font-bold tabular-nums">
+                  {hours} {ui.hours}
+                </td>
+                <td />
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    ))
+  }
+</div>

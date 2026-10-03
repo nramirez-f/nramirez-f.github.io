@@ -1,0 +1,11 @@
+# Papers and preprints. status: published | accepted | submitted | preprint
+# Example:
+# ramirez-2026-allfroude:
+#   title: An all-Froude semi-implicit scheme for the 2D shallow-water equations
+#   authors: [J. I. Ramírez-Fuentes, M. L. Muñoz-Ruiz, C. Escalante, T. Morales de Luna]
+#   status: submitted
+#   year: 2026
+#   arxiv: 2610.00000
+#   bibtex: |
+#     @article{...}
+{}

@@ -1,0 +1,33 @@
+---
+import TalkItem from '@/components/TalkItem.astro';
+import { getTalks, groupByYear } from '@/lib/data';
+import type { Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const talks = await getTalks();
+const years = groupByYear(talks, (t) => t.data.start);
+---
+
+<p class="text-ink-soft">
+  {
+    lang === 'es'
+      ? 'Comunicaciones orales en congresos nacionales e internacionales. El ponente aparece subrayado.'
+      : 'Contributed talks at national and international conferences. The speaker is underlined.'
+  }
+</p>
+
+{
+  years.map(([year, items]) => (
+    <section class="mt-8">
+      <h2 class="mb-3 text-[1.35rem] font-bold">{year}</h2>
+      <ul class="entries">
+        {items.map((talk) => (
+          <TalkItem talk={talk} lang={lang} />
+        ))}
+      </ul>
+    </section>
+  ))
+}

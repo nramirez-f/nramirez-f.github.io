@@ -1,0 +1,170 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+/* `dark:` follows the .dark class set by the theme toggle, not the OS. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------------------------------------------------------------------
+   Design tokens. Every component reads these; nothing hardcodes a hex.
+   --------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+
+  --paper: #fdfcf8; /* page background, a hint of paper */
+  --ink: #1b1b1b; /* primary text */
+  --ink-soft: #55555a; /* secondary text */
+  --signal: #1f4e8c; /* the one accent: links, like hyperref */
+  --line: #e2e0d9; /* rules and borders */
+  --surface: #f4f2ec; /* raised panels */
+}
+
+.dark {
+  color-scheme: dark;
+
+  --paper: #131416;
+  --ink: #ebe9e4;
+  --ink-soft: #a3a3a8;
+  --signal: #8db4ec;
+  --line: #2a2b2f;
+  --surface: #1b1c1f;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-signal: var(--signal);
+  --color-line: var(--line);
+  --color-surface: var(--surface);
+
+  /* Families loaded by the Fonts API in astro.config.mjs. */
+  --font-serif: var(--ff-serif);
+  --font-mono: var(--ff-mono);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    /* Latin Modern is a light face: a slightly larger size reads like a PDF. */
+    font-size: 18px;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-serif);
+    line-height: 1.55;
+    font-kerning: normal;
+    font-variant-ligatures: common-ligatures;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-weight: 700;
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+
+  a {
+    color: var(--color-signal);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  ::selection {
+    background-color: var(--color-signal);
+    color: var(--color-paper);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-signal);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    body {
+      transition:
+        background-color 200ms ease,
+        color 200ms ease;
+    }
+  }
+}
+
+@layer components {
+  /* Numbered section heading, like \section in LaTeX. */
+  main {
+    counter-reset: section;
+  }
+  .section-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-bottom: 0.9rem;
+  }
+  .section-title::before {
+    counter-increment: section;
+    content: counter(section);
+    display: inline-block;
+    min-width: 1.6em;
+  }
+
+  /* Dense chronological list: date column + content (cpraveen-style). */
+  .entries {
+    display: grid;
+    gap: 0.85rem;
+  }
+  .entry {
+    display: grid;
+    gap: 0.1rem 1.25rem;
+  }
+  @media (min-width: 640px) {
+    .entry {
+      grid-template-columns: 7.5rem 1fr;
+    }
+  }
+  .entry-when {
+    color: var(--color-ink-soft);
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  .tag {
+    display: inline-block;
+    border: 1px solid var(--color-line);
+    border-radius: 3px;
+    padding: 0 0.35rem;
+    font-size: 0.75rem;
+    color: var(--color-ink-soft);
+    vertical-align: 0.1em;
+  }
+}
+
+/* Prose (rendered Markdown) uses the same tokens. */
+.prose {
+  --tw-prose-body: var(--color-ink);
+  --tw-prose-headings: var(--color-ink);
+  --tw-prose-bold: var(--color-ink);
+  --tw-prose-links: var(--color-signal);
+  --tw-prose-bullets: var(--color-ink-soft);
+  --tw-prose-counters: var(--color-ink-soft);
+  --tw-prose-hr: var(--color-line);
+  --tw-prose-quotes: var(--color-ink);
+  --tw-prose-quote-borders: var(--color-line);
+  --tw-prose-code: var(--color-ink);
+  --tw-prose-th-borders: var(--color-line);
+  --tw-prose-td-borders: var(--color-line);
+}
+
+/* KaTeX inherits the text colour in both themes. */
+.katex {
+  font-size: 1.05em;
+}
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.25rem 0;
+}

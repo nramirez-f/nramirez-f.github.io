@@ -1,0 +1,103 @@
+---
+import Section from '@/components/Section.astro';
+import Entry from '@/components/Entry.astro';
+import { SITE } from '@/site.config';
+import { getTalks, getPublications } from '@/lib/data';
+import { ROUTES, UI, l, formatDate, type Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const ui = UI[lang];
+
+const [talks, pubs] = await Promise.all([getTalks(), getPublications()]);
+const news = [
+  ...talks.map((t) => ({
+    date: t.data.start,
+    text: `${ui.talkAt} ${l(t.data.event, lang).split(' – ')[0]} (${l(t.data.city, lang)}): «${t.data.title}».`,
+    href: ROUTES.talks[lang],
+  })),
+  ...pubs.map((p) => ({
+    date: new Date(Date.UTC(p.data.year, 0, 1)),
+    text: `${p.data.status === 'published' ? (lang === 'es' ? 'Publicado' : 'Published') : lang === 'es' ? 'Nuevo preprint' : 'New preprint'}: «${p.data.title}».`,
+    href: ROUTES.research[lang],
+  })),
+]
+  .sort((a, b) => b.date.valueOf() - a.date.valueOf())
+  .slice(0, 5);
+
+const interests =
+  lang === 'es'
+    ? [
+        'Leyes de balance hiperbólicas y modelos de aguas someras.',
+        'Esquemas semi-implícitos y de relajación robustos en todo el rango de números de Froude.',
+        'Métodos de volúmenes finitos bien equilibrados y de alto orden.',
+        'Computación científica de altas prestaciones en GPU (CUDA).',
+      ]
+    : [
+        'Hyperbolic balance laws and shallow-water models.',
+        'Semi-implicit and relaxation schemes, robust across all Froude regimes.',
+        'Well-balanced and high-order finite volume methods.',
+        'High-performance scientific computing on GPUs (CUDA).',
+      ];
+---
+
+<div class="space-y-4">
+  {
+    lang === 'es' ? (
+      <>
+        <p>
+          Soy doctorando en el grupo <a href={SITE.group.url}>{SITE.group.name}</a> de la Universidad de
+          Málaga, bajo la dirección de <a href={SITE.advisors[0].url}>{SITE.advisors[0].name}</a> y{' '}
+          <a href={SITE.advisors[1].url}>{SITE.advisors[1].name}</a>. Trabajo en el diseño, el análisis y la
+          implementación de métodos numéricos para leyes de balance hiperbólicas, en particular para los
+          modelos de aguas someras con los que se simulan flujos geofísicos como tsunamis o inundaciones.
+        </p>
+        <p>
+          Me gradué en Matemáticas en la UMA y completé allí el Máster en Matemáticas con un trabajo sobre
+          las ecuaciones de Navier–Stokes, desde su deducción hasta su resolución numérica con un método de
+          pasos fraccionados en volúmenes finitos. Desarrollo mi propio software científico en Python, C/C++ y
+          CUDA.
+        </p>
+      </>
+    ) : (
+      <>
+        <p>
+          I am a PhD student in the <a href={SITE.group.url}>{SITE.group.name}</a> group at the University of
+          Málaga, advised by <a href={SITE.advisors[0].url}>{SITE.advisors[0].name}</a> and{' '}
+          <a href={SITE.advisors[1].url}>{SITE.advisors[1].name}</a>. I work on the design, analysis and
+          implementation of numerical methods for hyperbolic balance laws, in particular for the
+          shallow-water models used to simulate geophysical flows such as tsunamis and floods.
+        </p>
+        <p>
+          I hold a BSc and an MSc in Mathematics from the University of Málaga; my master thesis covered the
+          Navier–Stokes equations from their derivation to their numerical solution with a fractional-step
+          finite volume method. I write my own scientific software in Python, C/C++ and CUDA.
+        </p>
+      </>
+    )
+  }
+</div>
+
+<Section title={ui.interests}>
+  <ul class="list-disc space-y-1 pl-6">
+    {interests.map((i) => <li>{i}</li>)}
+  </ul>
+</Section>
+
+{
+  news.length > 0 && (
+    <Section title={ui.news}>
+      <ul class="entries">
+        {news.map((n) => (
+          <Entry when={formatDate(n.date, lang, { month: 'short', year: 'numeric' })}>
+            <a href={n.href} class="text-ink no-underline hover:underline">
+              {n.text}
+            </a>
+          </Entry>
+        ))}
+      </ul>
+    </Section>
+  )
+}

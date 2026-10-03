@@ -1,0 +1,44 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Entry from '@/components/Entry.astro';
+import { UI, l, formatRange, type Lang } from '@/i18n';
+
+interface Props {
+  talk: CollectionEntry<'talks'>;
+  lang: Lang;
+}
+const { talk, lang } = Astro.props;
+const t = talk.data;
+const ui = UI[lang];
+---
+
+<Entry when={formatRange(t.start, t.end, lang)}>
+  <span class="font-bold">{t.title}</span>
+  {
+    t.authors.length > 0 && (
+      <span class="text-ink-soft block text-[0.95rem]">
+        {t.authors.map((a, i) => (
+          <>
+            {i > 0 && ', '}
+            {a === t.presenter ? <span class="underline decoration-1 underline-offset-2">{a}</span> : a}
+          </>
+        ))}
+      </span>
+    )
+  }
+  <span class="block">
+    <em>
+      {t.eventUrl ? <a href={t.eventUrl}>{l(t.event, lang)}</a> : l(t.event, lang)}
+    </em>
+    . {l(t.city, lang)}, {l(t.country, lang)}.{' '}
+    <span class="tag">{t.scope === 'international' ? ui.international : ui.national}</span>
+  </span>
+  {
+    (t.slides || t.video) && (
+      <span class="mt-0.5 flex gap-3 text-[0.95rem]">
+        {t.slides && <a href={t.slides}>[{ui.slides}]</a>}
+        {t.video && <a href={t.video}>[{ui.video}]</a>}
+      </span>
+    )
+  }
+</Entry>

@@ -1,0 +1,35 @@
+# Teaching (collaboration in official degree courses at UMA).
+# One entry per subject and academic year. `credits` = ECTS of the subject.
+# TODO: add the ECTS credits of each subject.
+
+2024-25-modelado:
+  year: 2024/25
+  semester: 2
+  subject: { es: Modelado Matemático, en: Mathematical Modelling }
+  degree: { es: Grado en Ciencias Ambientales, en: BSc in Environmental Sciences }
+  kind: practice
+  hours: 17
+
+2025-26-fma2:
+  year: 2025/26
+  semester: 2
+  subject: { es: Fundamentos Matemáticos de la Arquitectura II, en: Mathematical Foundations of Architecture II }
+  degree: { es: Grado en Fundamentos de Arquitectura, en: BSc in Fundamentals of Architecture }
+  kind: theory
+  hours: 4
+
+2025-26-analisis-numerico:
+  year: 2025/26
+  semester: 2
+  subject: { es: Análisis Numérico, en: Numerical Analysis }
+  degree: { es: Grado en Matemáticas, en: BSc in Mathematics }
+  kind: practice
+  hours: 18
+
+2025-26-modelizacion:
+  year: 2025/26
+  semester: 2
+  subject: { es: Modelización, en: Modelling }
+  degree: { es: Grado en Matemáticas, en: BSc in Mathematics }
+  kind: practice
+  hours: 3

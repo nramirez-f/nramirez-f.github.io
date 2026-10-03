@@ -1,0 +1,137 @@
+---
+import Section from '@/components/Section.astro';
+import Entry from '@/components/Entry.astro';
+import Tex from '@/components/Tex.astro';
+import ProjectItem from '@/components/ProjectItem.astro';
+import PublicationItem from '@/components/PublicationItem.astro';
+import { SITE } from '@/site.config';
+import { getProjects, getPublications } from '@/lib/data';
+import { l, type Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const es = lang === 'es';
+
+const [projects, pubs] = await Promise.all([getProjects(), getPublications()]);
+const papers = pubs.filter((p) => p.data.status === 'published' || p.data.status === 'accepted');
+const preprints = pubs.filter((p) => p.data.status === 'submitted' || p.data.status === 'preprint');
+
+const shallowWater = String.raw`
+\begin{aligned}
+  \partial_t h + \nabla\cdot(h\mathbf{u}) &= 0,\\
+  \partial_t (h\mathbf{u}) + \nabla\cdot\left(h\,\mathbf{u}\otimes\mathbf{u}\right)
+    + \nabla\!\left(\tfrac{g}{2}h^2\right) &= -g\,h\,\nabla z_b .
+\end{aligned}`;
+---
+
+<p>
+  {
+    es
+      ? 'Mi investigación se centra en esquemas numéricos para sistemas hiperbólicos de leyes de balance, y en particular para las ecuaciones de aguas someras:'
+      : 'My research focuses on numerical schemes for hyperbolic systems of balance laws, in particular the shallow-water equations:'
+  }
+</p>
+<div class="my-3"><Tex tex={shallowWater} display /></div>
+<p>
+  {
+    es ? (
+      <>
+        donde <Tex tex="h" /> es el espesor de la lámina de agua, <Tex tex="\mathbf{u}" /> la velocidad
+        promediada en vertical y <Tex tex="z_b" /> la batimetría. Me interesan esquemas que preserven los
+        estados estacionarios (<em>well-balanced</em>) y que sigan siendo precisos y eficientes cuando el
+        número de Froude <Tex tex="\mathrm{Fr} = |\mathbf{u}|/\sqrt{gh}" /> es muy pequeño, el régimen típico
+        de muchos flujos geofísicos.
+      </>
+    ) : (
+      <>
+        where <Tex tex="h" /> is the water depth, <Tex tex="\mathbf{u}" /> the depth-averaged velocity and{' '}
+        <Tex tex="z_b" /> the bathymetry. I am interested in schemes that preserve steady states
+        (well-balanced) and remain accurate and efficient when the Froude number{' '}
+        <Tex tex="\mathrm{Fr} = |\mathbf{u}|/\sqrt{gh}" /> is very small, the typical regime of many
+        geophysical flows.
+      </>
+    )
+  }
+</p>
+
+<Section title={es ? 'Publicaciones' : 'Publications'} id="publications">
+  {
+    papers.length > 0 && (
+      <>
+        <h3 class="mb-2 text-lg">{es ? 'Artículos' : 'Journal articles'}</h3>
+        <ul class="entries mb-6">
+          {papers.map((p) => (
+            <PublicationItem pub={p} lang={lang} />
+          ))}
+        </ul>
+      </>
+    )
+  }
+  {
+    preprints.length > 0 && (
+      <>
+        <h3 class="mb-2 text-lg">{es ? 'Preprints y artículos enviados' : 'Preprints and submitted papers'}</h3>
+        <ul class="entries mb-6">
+          {preprints.map((p) => (
+            <PublicationItem pub={p} lang={lang} />
+          ))}
+        </ul>
+      </>
+    )
+  }
+  {
+    pubs.length === 0 && (
+      <p class="text-ink-soft mb-6">
+        {es
+          ? 'Primer artículo en revisión; aparecerá aquí en cuanto esté disponible como preprint.'
+          : 'First paper under review; it will appear here as soon as the preprint is available.'}
+      </p>
+    )
+  }
+  <h3 class="mb-2 text-lg">{es ? 'Trabajos académicos' : 'Theses'}</h3>
+  <ul class="entries">
+    <Entry when="2024">
+      <span class="font-bold">
+        {es ? 'Las ecuaciones de Navier–Stokes. Teoría e implementación numérica' : 'Navier–Stokes equations. Theory and numerical implementation'}
+      </span>
+      <span class="text-ink-soft block">
+        {es ? 'Trabajo Fin de Máster, Máster en Matemáticas, Universidad de Málaga. Matrícula de Honor.' : 'Master thesis, MSc in Mathematics, University of Málaga. With Honours.'}
+      </span>
+    </Entry>
+    <Entry when="2022">
+      <span class="font-bold">
+        {es ? 'Transformada Z y sus aplicaciones a señales y sistemas' : 'Z-transform and applications to signals and systems'}
+      </span>
+      <span class="text-ink-soft block">
+        {es ? 'Trabajo Fin de Grado, Grado en Matemáticas, Universidad de Málaga.' : 'Bachelor thesis, BSc in Mathematics, University of Málaga.'}
+      </span>
+    </Entry>
+  </ul>
+</Section>
+
+<Section title={es ? 'Proyectos de investigación' : 'Research projects'} id="projects">
+  <ul class="entries">
+    {projects.map((p) => <ProjectItem project={p} lang={lang} />)}
+  </ul>
+</Section>
+
+<Section title={es ? 'Grupo de investigación' : 'Research group'} id="group">
+  <p>
+    <a href={SITE.group.url}>{SITE.group.name}</a> ({SITE.group.code}) — {l(SITE.group.fullName, lang)},{' '}
+    {l(SITE.university, lang)}.{' '}
+    {es ? 'Miembro desde 2025.' : 'Member since 2025.'}
+  </p>
+  <p class="mt-2">
+    {es ? 'Directores de tesis' : 'PhD advisors'}:{' '}
+    {
+      SITE.advisors.map((a, i) => (
+        <>
+          {i > 0 && (es ? ' y ' : ' and ')}
+          <a href={a.url}>{a.name}</a>
+        </>
+      ))
+    }.
+  </p>
+</Section>

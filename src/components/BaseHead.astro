@@ -1,0 +1,60 @@
+---
+import { Font } from 'astro:assets';
+import { SITE } from '@/site.config';
+import { ROUTES, UI, LANGS, type Lang, type PageKey } from '@/i18n';
+
+interface Props {
+  title: string;
+  description?: string;
+  lang: Lang;
+  page?: PageKey;
+}
+
+const { title: pageTitle, description: pageDescription, lang, page } = Astro.props;
+
+const fullTitle = pageTitle === SITE.name ? SITE.name : `${pageTitle} · ${SITE.name}`;
+const description = pageDescription || UI[lang].description;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="generator" content={Astro.generator} />
+<meta name="author" content={SITE.name} />
+
+<link rel="canonical" href={canonicalURL} />
+{
+  page &&
+    LANGS.map((alt) => (
+      <link rel="alternate" hreflang={alt} href={new URL(ROUTES[page][alt], Astro.site)} />
+    ))
+}
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="sitemap" href="/sitemap-index.xml" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:description" content={description} />
+<meta property="og:locale" content={UI[lang].dateLocale.replace('-', '_')} />
+<meta name="twitter:card" content="summary" />
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+<Font cssVariable="--ff-serif" preload />
+<Font cssVariable="--ff-mono" />
+
+<script is:inline>
+  // Runs before first paint to avoid a flash of the wrong theme.
+  (function () {
+    let stored = null;
+    try {
+      stored = localStorage.getItem('theme');
+    } catch {}
+    const theme =
+      stored ?? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+  })();
+</script>

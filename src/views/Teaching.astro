@@ -1,0 +1,19 @@
+---
+import TeachingTable from '@/components/TeachingTable.astro';
+import type { Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+---
+
+<p class="text-ink-soft mb-6">
+  {
+    lang === 'es'
+      ? 'Docencia en grados oficiales de la Universidad de Málaga, en calidad de colaboración docente.'
+      : 'Teaching in official degree programmes at the University of Málaga, as a teaching collaborator.'
+  }
+</p>
+
+<TeachingTable lang={lang} />

@@ -1,0 +1,51 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Entry from '@/components/Entry.astro';
+import { UI, type Lang } from '@/i18n';
+
+interface Props {
+  pub: CollectionEntry<'publications'>;
+  lang: Lang;
+}
+const { pub, lang } = Astro.props;
+const p = pub.data;
+const ui = UI[lang];
+const status = {
+  published: '',
+  accepted: lang === 'es' ? 'Aceptado' : 'Accepted',
+  submitted: lang === 'es' ? 'Enviado' : 'Submitted',
+  preprint: 'Preprint',
+}[p.status];
+---
+
+<Entry when={String(p.year)}>
+  <span class="block">{p.authors.join(', ')}.</span>
+  <span class="font-bold">{p.title}.</span>{' '}
+  {p.journal && <em>{p.journal}.</em>}
+  {status && <span class="tag">{status}</span>}
+  <span class="mt-0.5 flex flex-wrap gap-3 text-[0.95rem]">
+    {p.doi && <a href={`https://doi.org/${p.doi}`}>[DOI]</a>}
+    {p.arxiv && <a href={`https://arxiv.org/abs/${p.arxiv}`}>[arXiv:{p.arxiv}]</a>}
+    {p.hal && <a href={`https://hal.science/${p.hal}`}>[HAL]</a>}
+    {
+      p.bibtex && (
+        <button type="button" class="text-signal cursor-pointer hover:underline" data-bibtex={p.bibtex.trim()} data-copied={ui.copied}>
+          [{ui.copy}]
+        </button>
+      )
+    }
+  </span>
+</Entry>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-bibtex]').forEach((button) => {
+    if (button.dataset.bound) return;
+    button.dataset.bound = 'true';
+    const label = button.textContent;
+    button.addEventListener('click', async () => {
+      await navigator.clipboard.writeText(button.dataset.bibtex ?? '');
+      button.textContent = `[${button.dataset.copied}]`;
+      setTimeout(() => (button.textContent = label), 1500);
+    });
+  });
+</script>

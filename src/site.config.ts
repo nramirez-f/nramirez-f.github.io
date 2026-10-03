@@ -11,10 +11,7 @@ export const SITE = {
     en: 'Department of Mathematical Analysis, Statistics and Operations Research, and Applied Mathematics',
   },
   // Second workplace shown on the contact page (no floor or office on purpose).
-  building: {
-    name: { es: 'Edificio de Investigación Ada Byron', en: 'Ada Byron Research Building' },
-    url: 'https://www.uma.es/adabyron/',
-  },
+  building: { es: 'Edificio de Investigación Ada Byron', en: 'Ada Byron Research Building' },
   group: {
     name: 'EDANYA',
     code: 'FQM-216',

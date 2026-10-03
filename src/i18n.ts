@@ -37,6 +37,42 @@ export const NAV_LABELS: Record<PageKey, Record<Lang, string>> = {
   contact: { es: 'Contacto', en: 'Contact' },
 };
 
+/** Meta description of each page (what search engines show under the link). */
+export const DESCRIPTIONS: Record<PageKey, Record<Lang, string>> = {
+  home: {
+    es: 'José Ignacio Ramírez-Fuentes, doctorando en Matemáticas en la Universidad de Málaga (grupo EDANYA). Métodos de volúmenes finitos bien equilibrados para sistemas hiperbólicos y aguas someras.',
+    en: 'José Ignacio Ramírez-Fuentes, PhD student in Mathematics at the University of Málaga (EDANYA group). Well-balanced finite volume methods for hyperbolic systems and shallow-water flows.',
+  },
+  research: {
+    es: 'Investigación de José Ignacio Ramírez-Fuentes: esquemas bien equilibrados y semi-implícitos para el sistema de aguas someras 2D, publicaciones, proyectos y grupo EDANYA.',
+    en: 'Research of José Ignacio Ramírez-Fuentes: well-balanced and semi-implicit schemes for the 2D shallow-water system, publications, projects and the EDANYA group.',
+  },
+  talks: {
+    es: 'Comunicaciones de José Ignacio Ramírez-Fuentes en congresos nacionales e internacionales (HYP2026, CEDYA, WCCM-ECCOMAS…) sobre métodos numéricos para aguas someras.',
+    en: 'Talks by José Ignacio Ramírez-Fuentes at national and international conferences (HYP2026, CEDYA, WCCM-ECCOMAS…) on numerical methods for shallow-water flows.',
+  },
+  code: {
+    es: 'Software científico en abierto de José Ignacio Ramírez-Fuentes en GitHub y GitLab: códigos en Python y C++ para métodos numéricos y dinámica de fluidos.',
+    en: 'Open-source scientific software by José Ignacio Ramírez-Fuentes on GitHub and GitLab: Python and C++ codes for numerical methods and fluid dynamics.',
+  },
+  teaching: {
+    es: 'Docencia universitaria de José Ignacio Ramírez-Fuentes en la Universidad de Málaga: asignaturas, titulaciones y horas por curso académico.',
+    en: 'University teaching of José Ignacio Ramírez-Fuentes at the University of Málaga: subjects, degrees and hours per academic year.',
+  },
+  outreach: {
+    es: 'Divulgación matemática de José Ignacio Ramírez-Fuentes, co-organizador de los Seminarios JEMA de la Sociedad Española de Matemática Aplicada (SEMA).',
+    en: 'Mathematical outreach by José Ignacio Ramírez-Fuentes, co-organiser of the JEMA Seminars of the Spanish Society of Applied Mathematics (SEMA).',
+  },
+  cv: {
+    es: 'CV académico de José Ignacio Ramírez-Fuentes: formación, experiencia investigadora, proyectos, comunicaciones, docencia y formación complementaria.',
+    en: 'Academic CV of José Ignacio Ramírez-Fuentes: education, research experience, projects, talks, teaching and further training.',
+  },
+  contact: {
+    es: 'Contacto de José Ignacio Ramírez-Fuentes: correo, afiliación en la Universidad de Málaga (grupo EDANYA) y perfiles académicos (ORCID, GitHub, GitLab).',
+    en: 'Contact José Ignacio Ramírez-Fuentes: email, affiliation at the University of Málaga (EDANYA group) and academic profiles (ORCID, GitHub, GitLab).',
+  },
+};
+
 export const UI = {
   es: {
     htmlLang: 'es',

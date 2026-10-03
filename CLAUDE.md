@@ -36,6 +36,14 @@ Never publish or commit the owner's national ID number, phone, birth date or hom
 - **Code page.** `src/views/Code.astro` fetches repos client-side from the GitHub and GitLab public APIs for `SITE.github` / `SITE.gitlab`. It keeps only repos tagged with the topic `SITE.codeTopic` (`research`), merges them by last activity and caches them for 30 min in `sessionStorage`. To show a repo, add that topic to it on GitHub or GitLab.
 - **Personal data and profiles.** These live in `src/site.config.ts`. Empty `orcid`, `scholar`, `arxiv` and `cvPdf` values hide the corresponding links and buttons.
 
+## SEO
+
+- Every page gets its own title and meta description (`DESCRIPTIONS` in `src/i18n.ts`). Update those when a page's content changes substantially.
+- `BaseHead.astro` emits the canonical URL, `hreflang` es/en plus `x-default` (Spanish), Open Graph and Twitter tags with `public/og.png`, and `noindex` for pages that pass it (404).
+- On the home page it also emits schema.org `ProfilePage` + `Person` JSON-LD, built from `src/site.config.ts`: name variants (`alternateName`), affiliation, ORCID and `sameAs` profiles. The name is the page's `<h1>` only on the home page (`Header.astro`).
+- `public/og.png` (1200×630, no photos) is rendered from `scripts/og-image.html`. The command to regenerate it is in that file.
+- URLs of the old site are redirected through `LEGACY_REDIRECTS` in `astro.config.mjs` and filtered out of the sitemap.
+
 ## Typography and styling
 
 - Fonts are self-hosted through the Astro Fonts API with the `local` provider: Latin Modern Roman (`src/assets/fonts/LM-*.woff2`) as `--ff-serif`, and KaTeX's Computer Modern Typewriter as `--ff-mono`. These fonts have no small-caps glyphs, so don't use `font-variant: small-caps`.

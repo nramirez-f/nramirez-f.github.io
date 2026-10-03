@@ -12,7 +12,7 @@ import Outreach from '@/views/Outreach.astro';
 import Cv from '@/views/Cv.astro';
 import Contact from '@/views/Contact.astro';
 import { SITE } from '@/site.config';
-import { LANGS, PAGES, ROUTES, NAV_LABELS, type Lang, type PageKey } from '@/i18n';
+import { LANGS, PAGES, ROUTES, NAV_LABELS, DESCRIPTIONS, type Lang, type PageKey } from '@/i18n';
 
 export const getStaticPaths = (() =>
   PAGES.flatMap((page) =>
@@ -33,7 +33,7 @@ const View = VIEWS[page];
 const title = page === 'home' ? SITE.name : NAV_LABELS[page][lang];
 ---
 
-<BaseLayout title={title} lang={lang} page={page}>
+<BaseLayout title={title} description={DESCRIPTIONS[page][lang]} lang={lang} page={page}>
   {page !== 'home' && <h1 class="mb-6 text-[1.7rem]">{title}</h1>}
   <View lang={lang} />
 </BaseLayout>

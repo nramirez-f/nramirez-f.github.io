@@ -10,15 +10,16 @@ interface Props {
   description?: string;
   lang: Lang;
   page?: PageKey;
+  noindex?: boolean;
 }
 
-const { title, description, lang, page } = Astro.props;
+const { title, description, lang, page, noindex } = Astro.props;
 ---
 
 <!doctype html>
 <html lang={UI[lang].htmlLang}>
   <head>
-    <BaseHead title={title} description={description} lang={lang} page={page} />
+    <BaseHead title={title} description={description} lang={lang} page={page} noindex={noindex} />
   </head>
   <body class="bg-paper text-ink">
     <a

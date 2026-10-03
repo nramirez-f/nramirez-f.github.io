@@ -11,14 +11,16 @@ interface Props {
 const { lang, page } = Astro.props;
 const other: Lang = lang === 'es' ? 'en' : 'es';
 const switchHref = ROUTES[page ?? 'home'][other];
+const Name = page === 'home' ? 'h1' : 'p';
 ---
 
 <header class="mx-auto max-w-[54rem] px-5 pt-10 pb-6 sm:pt-14">
   <div class="flex items-start justify-between gap-4">
     <div>
-      <a href={ROUTES.home[lang]} class="text-ink text-2xl font-bold no-underline sm:text-[1.7rem]">
-        {SITE.name}
-      </a>
+      {/* On the home page the name is the page's main heading (h1). */}
+      <Name class="text-2xl leading-tight font-bold sm:text-[1.7rem]">
+        <a href={ROUTES.home[lang]} class="text-ink no-underline">{SITE.name}</a>
+      </Name>
       <p class="text-ink-soft mt-1 text-[0.95rem]">
         {UI[lang].role} · {l(SITE.university, lang)}
       </p>

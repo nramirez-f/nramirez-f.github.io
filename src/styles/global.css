@@ -97,20 +97,10 @@
 }
 
 @layer components {
-  /* Numbered section heading, like \section in LaTeX. */
-  main {
-    counter-reset: section;
-  }
   .section-title {
     font-size: 1.35rem;
     font-weight: 700;
     margin-bottom: 0.9rem;
-  }
-  .section-title::before {
-    counter-increment: section;
-    content: counter(section);
-    display: inline-block;
-    min-width: 1.6em;
   }
 
   /* Dense chronological list: date column + content (cpraveen-style). */
@@ -124,7 +114,7 @@
   }
   @media (min-width: 640px) {
     .entry {
-      grid-template-columns: 7.5rem 1fr;
+      grid-template-columns: 9.5rem 1fr;
     }
   }
   .entry-when {

@@ -10,8 +10,8 @@ const years = await getTeachingByYear();
 const ui = UI[lang];
 const h =
   lang === 'es'
-    ? { subject: 'Asignatura', degree: 'Titulación', kind: 'Tipo', hours: 'Horas', credits: 'ECTS', theory: 'Teoría', practice: 'Prácticas', year: 'Curso', sem: 'semestre' }
-    : { subject: 'Subject', degree: 'Degree', kind: 'Type', hours: 'Hours', credits: 'ECTS', theory: 'Lectures', practice: 'Problem classes', year: 'Academic year', sem: 'semester' };
+    ? { subject: 'Asignatura', degree: 'Titulación', kind: 'Tipo', hours: 'Horas', theory: 'Teoría', practice: 'Prácticas', year: 'Curso' }
+    : { subject: 'Subject', degree: 'Degree', kind: 'Type', hours: 'Hours', theory: 'Lectures', practice: 'Problem classes', year: 'Academic year' };
 ---
 
 <div class="space-y-7">
@@ -22,14 +22,13 @@ const h =
           {h.year} {year}
         </h3>
         <div class="overflow-x-auto">
-          <table class="w-full min-w-[34rem] table-fixed border-collapse text-[0.95rem]">
+          <table class="w-full min-w-[32rem] table-fixed border-collapse text-[0.95rem]">
             <thead>
               <tr class="border-ink border-t border-b text-left">
-                <th class="w-[36%] py-1 pr-3 font-bold">{h.subject}</th>
-                <th class="w-[32%] py-1 pr-3 font-bold">{h.degree}</th>
+                <th class="w-[40%] py-1 pr-3 font-bold">{h.subject}</th>
+                <th class="w-[36%] py-1 pr-3 font-bold">{h.degree}</th>
                 <th class="w-[14%] py-1 pr-3 font-bold">{h.kind}</th>
-                <th class="w-[10%] py-1 pr-3 text-right font-bold">{h.hours}</th>
-                <th class="w-[8%] py-1 text-right font-bold">{h.credits}</th>
+                <th class="w-[10%] py-1 text-right font-bold">{h.hours}</th>
               </tr>
             </thead>
             <tbody>
@@ -38,8 +37,7 @@ const h =
                   <td class="py-1 pr-3">{l(r.data.subject, lang)}</td>
                   <td class="text-ink-soft py-1 pr-3">{l(r.data.degree, lang)}</td>
                   <td class="text-ink-soft py-1 pr-3">{r.data.kind === 'theory' ? h.theory : h.practice}</td>
-                  <td class="py-1 pr-3 text-right tabular-nums">{r.data.hours}</td>
-                  <td class="py-1 text-right tabular-nums">{r.data.credits ?? '—'}</td>
+                  <td class="py-1 text-right tabular-nums">{r.data.hours}</td>
                 </tr>
               ))}
             </tbody>
@@ -48,10 +46,9 @@ const h =
                 <td class="py-1 pr-3 font-bold" colspan="3">
                   {ui.total}
                 </td>
-                <td class="py-1 pr-3 text-right font-bold tabular-nums">
+                <td class="py-1 text-right font-bold tabular-nums">
                   {hours} {ui.hours}
                 </td>
-                <td />
               </tr>
             </tfoot>
           </table>

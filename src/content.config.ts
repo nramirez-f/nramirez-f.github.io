@@ -16,6 +16,7 @@ const talks = defineCollection({
     eventUrl: z.url().optional(),
     city: localized,
     country: localized,
+    coords: z.tuple([z.number(), z.number()]), // [lat, lon] for the map
     start: z.coerce.date(),
     end: z.coerce.date().optional(),
     scope: z.enum(['national', 'international']),
@@ -37,7 +38,6 @@ const teaching = defineCollection({
     degree: localized,
     kind: z.enum(['theory', 'practice']),
     hours: z.number(),
-    credits: z.number().optional(), // ECTS of the subject
     university: localized.default({ es: 'Universidad de Málaga', en: 'University of Málaga' }),
   }),
 });
@@ -74,15 +74,4 @@ const projects = defineCollection({
   }),
 });
 
-/** Outreach videos (YouTube ids). */
-const videos = defineCollection({
-  loader: file('src/data/videos.yaml'),
-  schema: z.object({
-    title: localized,
-    date: z.coerce.date(),
-    youtube: z.string(), // video id
-    description: localized.optional(),
-  }),
-});
-
-export const collections = { talks, teaching, publications, projects, videos };
+export const collections = { talks, teaching, publications, projects };

@@ -12,6 +12,7 @@ interface Props {
   lang: Lang;
 }
 const { lang } = Astro.props;
+const TFM_URL = 'https://github.com/nramirez-f/Lid-Driven-Cavity';
 const es = lang === 'es';
 
 const [projects, pubs] = await Promise.all([getProjects(), getPublications()]);
@@ -22,15 +23,15 @@ const shallowWater = String.raw`
 \begin{aligned}
   \partial_t h + \nabla\cdot(h\mathbf{u}) &= 0,\\
   \partial_t (h\mathbf{u}) + \nabla\cdot\left(h\,\mathbf{u}\otimes\mathbf{u}\right)
-    + \nabla\!\left(\tfrac{g}{2}h^2\right) &= -g\,h\,\nabla z_b .
+    + \nabla\!\left(\tfrac{g}{2}h^2\right) &= g\,h\,\nabla H .
 \end{aligned}`;
 ---
 
 <p>
   {
     es
-      ? 'Mi investigación se centra en esquemas numéricos para sistemas hiperbólicos de leyes de balance, y en particular para las ecuaciones de aguas someras:'
-      : 'My research focuses on numerical schemes for hyperbolic systems of balance laws, in particular the shallow-water equations:'
+      ? 'Mi investigación se centra en métodos de volúmenes finitos bien equilibrados para sistemas hiperbólicos bidimensionales de leyes de balance, y en particular para el sistema de aguas someras (Shallow-Water):'
+      : 'My research focuses on well-balanced finite volume methods for two-dimensional hyperbolic systems of balance laws, in particular the shallow-water system:'
   }
 </p>
 <div class="my-3"><Tex tex={shallowWater} display /></div>
@@ -39,18 +40,20 @@ const shallowWater = String.raw`
     es ? (
       <>
         donde <Tex tex="h" /> es el espesor de la lámina de agua, <Tex tex="\mathbf{u}" /> la velocidad
-        promediada en vertical y <Tex tex="z_b" /> la batimetría. Me interesan esquemas que preserven los
-        estados estacionarios (<em>well-balanced</em>) y que sigan siendo precisos y eficientes cuando el
-        número de Froude <Tex tex="\mathrm{Fr} = |\mathbf{u}|/\sqrt{gh}" /> es muy pequeño, el régimen típico
-        de muchos flujos geofísicos.
+        promediada en vertical, <Tex tex="g" /> la aceleración de la gravedad y <Tex tex="H" /> la
+        profundidad del fondo medida desde un nivel de referencia fijo, de modo que la superficie libre es{' '}
+        <Tex tex="\eta = h - H" />. Un esquema bien equilibrado preserva exactamente los estados
+        estacionarios, como el lago en reposo <Tex tex={String.raw`\eta = \text{cte},\ \mathbf{u} = \mathbf{0}`} />.
+        Actualmente desarrollo un esquema semi-implícito para este sistema en dos dimensiones.
       </>
     ) : (
       <>
-        where <Tex tex="h" /> is the water depth, <Tex tex="\mathbf{u}" /> the depth-averaged velocity and{' '}
-        <Tex tex="z_b" /> the bathymetry. I am interested in schemes that preserve steady states
-        (well-balanced) and remain accurate and efficient when the Froude number{' '}
-        <Tex tex="\mathrm{Fr} = |\mathbf{u}|/\sqrt{gh}" /> is very small, the typical regime of many
-        geophysical flows.
+        where <Tex tex="h" /> is the water depth, <Tex tex="\mathbf{u}" /> the depth-averaged velocity,{' '}
+        <Tex tex="g" /> the gravitational acceleration and <Tex tex="H" /> the depth of the bottom measured
+        from a fixed reference level, so that the free surface is <Tex tex="\eta = h - H" />. A well-balanced
+        scheme preserves steady states exactly, such as the lake at rest{' '}
+        <Tex tex={String.raw`\eta = \text{const},\ \mathbf{u} = \mathbf{0}`} />. I am currently developing a semi-implicit
+        scheme for this system in two dimensions.
       </>
     )
   }
@@ -99,6 +102,7 @@ const shallowWater = String.raw`
       <span class="text-ink-soft block">
         {es ? 'Trabajo Fin de Máster, Máster en Matemáticas, Universidad de Málaga. Matrícula de Honor.' : 'Master thesis, MSc in Mathematics, University of Málaga. With Honours.'}
       </span>
+      <a href={TFM_URL} class="text-[0.95rem]">[{es ? 'Memoria y código (Lid-Driven Cavity)' : 'Thesis and code (Lid-Driven Cavity)'}]</a>
     </Entry>
     <Entry when="2022">
       <span class="font-bold">
@@ -117,14 +121,15 @@ const shallowWater = String.raw`
   </ul>
 </Section>
 
-<Section title={es ? 'Grupo de investigación' : 'Research group'} id="group">
+<Section title={es ? 'Grupo de investigación y doctorado' : 'Research group and PhD'} id="group">
   <p>
-    <a href={SITE.group.url}>{SITE.group.name}</a> ({SITE.group.code}) — {l(SITE.group.fullName, lang)},{' '}
-    {l(SITE.university, lang)}.{' '}
-    {es ? 'Miembro desde 2025.' : 'Member since 2025.'}
+    {es ? 'Miembro del grupo' : 'Member of the research group'} <a href={SITE.group.url}>{SITE.group.name}</a> ({SITE.group.code}) —{' '}
+    {l(SITE.group.fullName, lang)}, {l(SITE.university, lang)}, {es ? 'desde 2025.' : 'since 2025.'}
   </p>
   <p class="mt-2">
-    {es ? 'Directores de tesis' : 'PhD advisors'}:{' '}
+    {es ? 'Doctorando del' : 'PhD student in the'} <a href={SITE.phd.url}>{l(SITE.phd.program, lang)}</a>{' '}
+    {es ? `desde ${SITE.phd.start}.` : `since ${SITE.phd.start}.`}{' '}
+    {es ? 'Directores de tesis' : 'Advisors'}:{' '}
     {
       SITE.advisors.map((a, i) => (
         <>
@@ -132,6 +137,6 @@ const shallowWater = String.raw`
           <a href={a.url}>{a.name}</a>
         </>
       ))
-    }.
+    }. Tutor: <a href={SITE.tutor.url}>{SITE.tutor.name}</a>.
   </p>
 </Section>

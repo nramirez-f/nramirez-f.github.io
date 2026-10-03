@@ -1,14 +1,12 @@
 ---
-// A numbered section (\section-style); numbers come from a CSS counter.
 interface Props {
   title: string;
   id?: string;
-  numbered?: boolean;
 }
-const { title, id, numbered = true } = Astro.props;
+const { title, id } = Astro.props;
 ---
 
 <section id={id} class="mt-10 first:mt-4">
-  <h2 class:list={[numbered ? 'section-title' : 'mb-3 text-[1.35rem] font-bold']}>{title}</h2>
+  <h2 class="section-title">{title}</h2>
   <slot />
 </section>

@@ -30,17 +30,20 @@ const news = [
 const interests =
   lang === 'es'
     ? [
-        'Leyes de balance hiperbólicas y modelos de aguas someras.',
-        'Esquemas semi-implícitos y de relajación robustos en todo el rango de números de Froude.',
-        'Métodos de volúmenes finitos bien equilibrados y de alto orden.',
-        'Computación científica de altas prestaciones en GPU (CUDA).',
+        'Sistemas hiperbólicos de leyes de balance.',
+        'Métodos de volúmenes finitos y esquemas bien equilibrados (well-balanced).',
+        'Esquemas semi-implícitos para el sistema de aguas someras bidimensional.',
+        'Modelización matemática de flujos geofísicos.',
       ]
     : [
-        'Hyperbolic balance laws and shallow-water models.',
-        'Semi-implicit and relaxation schemes, robust across all Froude regimes.',
-        'Well-balanced and high-order finite volume methods.',
-        'High-performance scientific computing on GPUs (CUDA).',
+        'Hyperbolic systems of balance laws.',
+        'Finite volume methods and well-balanced schemes.',
+        'Semi-implicit schemes for the two-dimensional shallow-water system.',
+        'Mathematical modelling of geophysical flows.',
       ];
+
+const [d1, d2] = SITE.advisors;
+const tutor = SITE.tutor;
 ---
 
 <div class="space-y-4">
@@ -48,32 +51,44 @@ const interests =
     lang === 'es' ? (
       <>
         <p>
-          Soy doctorando en el grupo <a href={SITE.group.url}>{SITE.group.name}</a> de la Universidad de
-          Málaga, bajo la dirección de <a href={SITE.advisors[0].url}>{SITE.advisors[0].name}</a> y{' '}
-          <a href={SITE.advisors[1].url}>{SITE.advisors[1].name}</a>. Trabajo en el diseño, el análisis y la
-          implementación de métodos numéricos para leyes de balance hiperbólicas, en particular para los
-          modelos de aguas someras con los que se simulan flujos geofísicos como tsunamis o inundaciones.
+          Soy doctorando del <a href={SITE.phd.url}>{l(SITE.phd.program, lang)}</a> de la Universidad de
+          Málaga desde {SITE.phd.start} y miembro del grupo de investigación{' '}
+          <a href={SITE.group.url}>{SITE.group.name}</a>. Mi tesis está dirigida por{' '}
+          <a href={d1.url}>{d1.name}</a> y <a href={d2.url}>{d2.name}</a>, con{' '}
+          <a href={tutor.url}>{tutor.name}</a> como tutor.
         </p>
         <p>
-          Me gradué en Matemáticas en la UMA y completé allí el Máster en Matemáticas con un trabajo sobre
-          las ecuaciones de Navier–Stokes, desde su deducción hasta su resolución numérica con un método de
-          pasos fraccionados en volúmenes finitos. Desarrollo mi propio software científico en Python, C/C++ y
-          CUDA.
+          Mi investigación se centra en métodos de volúmenes finitos bien equilibrados para sistemas
+          hiperbólicos bidimensionales con aplicaciones en dinámica de fluidos. Actualmente trabajo en el
+          desarrollo de un esquema semi-implícito para el sistema de aguas someras (<em>Shallow-Water</em>)
+          en dos dimensiones.
+        </p>
+        <p>
+          Me gradué en Matemáticas en la Universidad de Málaga, donde también completé el Máster de
+          Profesorado (especialidad de Matemáticas) y el Máster en Matemáticas, con un trabajo fin de máster
+          sobre las ecuaciones de Navier–Stokes. Antes de empezar el doctorado trabajé como investigador
+          contratado en EDANYA en proyectos de investigación europeos y nacionales. Desarrollo mi propio
+          software científico en Python y C++.
         </p>
       </>
     ) : (
       <>
         <p>
-          I am a PhD student in the <a href={SITE.group.url}>{SITE.group.name}</a> group at the University of
-          Málaga, advised by <a href={SITE.advisors[0].url}>{SITE.advisors[0].name}</a> and{' '}
-          <a href={SITE.advisors[1].url}>{SITE.advisors[1].name}</a>. I work on the design, analysis and
-          implementation of numerical methods for hyperbolic balance laws, in particular for the
-          shallow-water models used to simulate geophysical flows such as tsunamis and floods.
+          I am a PhD student in the <a href={SITE.phd.url}>{l(SITE.phd.program, lang)}</a> at the University
+          of Málaga since {SITE.phd.start} and a member of the <a href={SITE.group.url}>{SITE.group.name}</a>{' '}
+          research group. My thesis is supervised by <a href={d1.url}>{d1.name}</a> and{' '}
+          <a href={d2.url}>{d2.name}</a>, with <a href={tutor.url}>{tutor.name}</a> as my tutor.
         </p>
         <p>
-          I hold a BSc and an MSc in Mathematics from the University of Málaga; my master thesis covered the
-          Navier–Stokes equations from their derivation to their numerical solution with a fractional-step
-          finite volume method. I write my own scientific software in Python, C/C++ and CUDA.
+          My research focuses on well-balanced finite volume methods for two-dimensional hyperbolic systems
+          with applications in fluid dynamics. I am currently developing a semi-implicit scheme for the
+          two-dimensional shallow-water system.
+        </p>
+        <p>
+          I graduated in Mathematics from the University of Málaga, where I also completed a Master in
+          Secondary Education Teaching (Mathematics) and an MSc in Mathematics, with a master thesis on the
+          Navier–Stokes equations. Before starting my PhD I worked as research staff in EDANYA on European and
+          national research projects. I write my own scientific software in Python and C++.
         </p>
       </>
     )

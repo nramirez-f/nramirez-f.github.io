@@ -2,8 +2,8 @@
 // contact page, SEO). Never add private data here (ID number, phone, home
 // address): everything in this file ends up in the public HTML.
 export const SITE = {
-  name: 'José Ignacio Ramírez Fuentes',
-  shortName: 'J. I. Ramírez Fuentes',
+  // Same form as on publications.
+  name: 'José Ignacio Ramírez-Fuentes',
   email: 'nramirez@uma.es',
   university: { es: 'Universidad de Málaga', en: 'University of Málaga' },
   department: {
@@ -17,19 +17,25 @@ export const SITE = {
       es: 'Ecuaciones Diferenciales, Análisis Numérico y Aplicaciones',
       en: 'Differential Equations, Numerical Analysis and Applications',
     },
-    url: 'https://edanya.uma.es/',
+    url: 'https://www.uma.es/edanya',
+  },
+  phd: {
+    program: { es: 'Programa de Doctorado en Matemáticas', en: 'PhD Programme in Mathematics' },
+    url: 'https://www.uma.es/doctorado-matematicas/',
+    start: 2025,
   },
   advisors: [
+    { name: 'María de la Luz Muñoz Ruiz', url: 'https://www.uma.es/edanya/info/108633/m-luz-munoz-ruiz/' },
     { name: 'Cipriano Escalante Sánchez', url: 'https://edanya.uma.es/escalante/' },
-    { name: 'Tomás Morales de Luna', url: 'https://edanya.uma.es/tmorales/' },
   ],
+  tutor: { name: 'Tomás Morales de Luna', url: 'https://edanya.uma.es/tmorales/' },
   // Code page: repositories on GitHub and GitLab tagged with `codeTopic`
   // are listed automatically, newest activity first.
   github: 'nramirez-f',
   gitlab: 'nramirez-f',
   codeTopic: 'research',
   // Academic profiles: leave empty ('') to hide.
-  orcid: '',
+  orcid: '0009-0004-8971-847X',
   scholar: '',
   arxiv: '',
   cvPdf: '', // e.g. '/cv/cv-ramirez-fuentes.pdf' once the file is in public/cv/

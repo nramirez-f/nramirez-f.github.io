@@ -1,5 +1,6 @@
 ---
 import TalkItem from '@/components/TalkItem.astro';
+import EuropeMap from '@/components/EuropeMap.astro';
 import { getTalks, groupByYear } from '@/lib/data';
 import type { Lang } from '@/i18n';
 
@@ -19,10 +20,12 @@ const years = groupByYear(talks, (t) => t.data.start);
   }
 </p>
 
+<EuropeMap talks={talks} lang={lang} />
+
 {
   years.map(([year, items]) => (
     <section class="mt-8">
-      <h2 class="mb-3 text-[1.35rem] font-bold">{year}</h2>
+      <h2 class="section-title">{year}</h2>
       <ul class="entries">
         {items.map((talk) => (
           <TalkItem talk={talk} lang={lang} />

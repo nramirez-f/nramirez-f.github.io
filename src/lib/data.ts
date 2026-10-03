@@ -34,11 +34,6 @@ export async function getProjects() {
   return projects.sort((a, b) => b.data.end.valueOf() - a.data.end.valueOf());
 }
 
-export async function getVideos() {
-  const videos = await getCollection('videos');
-  return videos.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-}
-
 /** Groups items by calendar year of a date field, newest year first. */
 export function groupByYear<T>(items: T[], date: (item: T) => Date) {
   const groups = new Map<number, T[]>();

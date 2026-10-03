@@ -1,4 +1,5 @@
 ---
+import OrcidIcon from '@/components/OrcidIcon.astro';
 import { SITE, PROFILES } from '@/site.config';
 import { l, type Lang } from '@/i18n';
 
@@ -9,7 +10,7 @@ const { lang } = Astro.props;
 const year = new Date().getFullYear();
 ---
 
-<footer class="mx-auto max-w-[44rem] px-5 pt-6 pb-12">
+<footer class="mx-auto max-w-[54rem] px-5 pt-6 pb-12">
   <div class="border-line text-ink-soft flex flex-col gap-2 border-t pt-4 text-sm sm:flex-row sm:justify-between">
     <p>
       © {year} {SITE.name} · {SITE.group.name}, {l(SITE.university, lang)}
@@ -19,6 +20,7 @@ const year = new Date().getFullYear();
         PROFILES.map((p) => (
           <li>
             <a href={p.href} rel="me" class="no-underline hover:underline">
+              {p.label === 'ORCID' && <OrcidIcon class="mr-1 h-3.5 w-3.5" />}
               {p.label}
             </a>
           </li>

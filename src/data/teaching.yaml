@@ -1,6 +1,5 @@
 # Teaching (collaboration in official degree courses at UMA).
-# One entry per subject and academic year. `credits` = ECTS of the subject.
-# TODO: add the ECTS credits of each subject.
+# One entry per subject and academic year.
 
 2024-25-modelado:
   year: 2024/25

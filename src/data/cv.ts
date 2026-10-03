@@ -4,20 +4,22 @@
 import type { Localized } from '@/i18n';
 
 export interface CvItem {
-  when: string; // free text: "2025", "2024–2025", "2025 – "
+  when: Localized; // free text: "2025", "2024 – 2025", { es: '2025 – en curso', … }
   what: Localized;
+  url?: string; // link on `what`
   where?: Localized;
   detail?: Localized;
 }
 
 export const EDUCATION: CvItem[] = [
   {
-    when: '2025 –',
-    what: { es: 'Doctorado en Matemáticas (en curso)', en: 'PhD in Mathematics (in progress)' },
+    when: { es: '2025 – en curso', en: '2025 – present' },
+    what: { es: 'Doctorado en Matemáticas', en: 'PhD in Mathematics' },
+    url: 'https://www.uma.es/doctorado-matematicas/',
     where: { es: 'Universidad de Málaga', en: 'University of Málaga' },
     detail: {
-      es: 'Directores: Cipriano Escalante Sánchez y Tomás Morales de Luna.',
-      en: 'Advisors: Cipriano Escalante Sánchez and Tomás Morales de Luna.',
+      es: 'Directores: María de la Luz Muñoz Ruiz y Cipriano Escalante Sánchez. Tutor: Tomás Morales de Luna.',
+      en: 'Advisors: María de la Luz Muñoz Ruiz and Cipriano Escalante Sánchez. Tutor: Tomás Morales de Luna.',
     },
   },
   {
@@ -50,15 +52,7 @@ export const EDUCATION: CvItem[] = [
 
 export const POSITIONS: CvItem[] = [
   {
-    when: '2025 –',
-    what: { es: 'Investigador contratado con cargo a proyectos', en: 'Research staff (project-funded)' },
-    where: {
-      es: 'Grupo EDANYA, Universidad de Málaga',
-      en: 'EDANYA group, University of Málaga',
-    },
-  },
-  {
-    when: '2024 – 2025',
+    when: { es: '2024 – actualidad', en: '2024 – present' },
     what: { es: 'Investigador contratado con cargo a proyectos', en: 'Research staff (project-funded)' },
     where: {
       es: 'Grupo EDANYA, Universidad de Málaga',
@@ -78,8 +72,8 @@ export const OTHER_EXPERIENCE: CvItem[] = [
   },
   {
     when: '2023 – 2024',
-    what: { es: 'Desarrollador web (prácticas)', en: 'Web developer (internship)' },
-    where: 'Mandarina Cloud S.L. · Cloud Asesoría Recursos e Innovación',
+    what: { es: 'Desarrollador web full stack', en: 'Full-stack web developer' },
+    where: 'Cloud Asesoría Recursos e Innovación',
   },
 ];
 

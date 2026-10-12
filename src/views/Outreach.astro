@@ -11,18 +11,28 @@ const es = lang === 'es';
 ---
 
 <Section title={es ? 'Seminarios JEMA' : 'JEMA Seminars'}>
+  <a href={JEMA_URL} class="mt-1 mb-5 block w-full max-w-[22rem]">
+    <img
+      src="/images/jema-seminarios.png"
+      width="1200"
+      height="457"
+      alt={es ? 'Seminarios JEMA – Jóvenes Españoles de Matemática Aplicada' : 'JEMA Seminars – Jóvenes Españoles de Matemática Aplicada'}
+      class="block h-auto w-full dark:bg-white"
+    />
+  </a>
   <p>
     {
       es ? (
         <>
-          Desde 2026 soy co-organizador de los <a href={JEMA_URL}>Seminarios JEMA</a> de la Sociedad Española
-          de Matemática Aplicada (SEMA): sesiones mensuales en línea en las que jóvenes investigadores presentan
+          Desde 2026 soy co-organizador de los <a href={JEMA_URL}>Seminarios JEMA</a> (Jóvenes Españoles de
+          Matemática Aplicada) de la Sociedad Española de Matemática Aplicada (SEMA): sesiones mensuales en línea en las que jóvenes investigadores presentan
           su trabajo en matemática aplicada y crean red con otros grupos.
         </>
       ) : (
         <>
-          Since 2026 I co-organise the <a href={JEMA_URL}>JEMA Seminars</a> of the Spanish Society of Applied
-          Mathematics (SEMA): monthly online sessions where early-career researchers present their work in
+          Since 2026 I co-organise the <a href={JEMA_URL}>JEMA Seminars</a> (<em>Jóvenes Españoles de
+          Matemática Aplicada</em>, young Spanish researchers in applied mathematics) of the Spanish Society of
+          Applied Mathematics (SEMA): monthly online sessions where early-career researchers present their work in
           applied mathematics and connect with other groups.
         </>
       )

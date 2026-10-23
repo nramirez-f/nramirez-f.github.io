@@ -1,0 +1,13 @@
+---
+// Page-width wrapper shared by header, sections and footer. `narrow` is the
+// reading width of text-only pages (CV).
+interface Props {
+  width?: 'site' | 'narrow';
+  class?: string;
+}
+const { width = 'site', class: className } = Astro.props;
+---
+
+<div class:list={['mx-auto w-full px-4 sm:px-6', width === 'site' ? 'max-w-site' : 'max-w-4xl', className]}>
+  <slot />
+</div>

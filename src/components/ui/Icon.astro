@@ -1,0 +1,58 @@
+---
+// Inline stroke icons (24-unit grid) plus the brand marks of the profiles.
+// Decorative: the text next to each icon carries the meaning.
+export type IconName = 'arrow' | 'arrow-up' | 'building' | 'external' | 'mail' | 'menu' | 'close' | 'print' | 'orcid' | 'github' | 'gitlab';
+
+interface Props {
+  name: IconName;
+  class?: string;
+}
+const { name, class: className = 'size-4' } = Astro.props;
+
+const strokes: Partial<Record<IconName, string>> = {
+  arrow: 'M5 12h14M13 6l6 6-6 6',
+  'arrow-up': 'M12 19V5M6 11l6-6 6 6',
+  building: 'M3 21h18M5 21V10M19 21V10M9 21v-6h6v6M2 10l10-6 10 6',
+  external: 'M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5',
+  mail: 'M4 6h16v12H4zM4 7l8 6 8-6',
+  menu: 'M4 7h16M4 12h16M4 17h16',
+  close: 'M6 6l12 12M18 6L6 18',
+  print: 'M7 9V4h10v5M7 17H5a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-2M7 14h10v6H7z',
+};
+const fills: Partial<Record<IconName, { viewBox: string; d: string }>> = {
+  github: {
+    viewBox: '0 0 16 16',
+    d: 'M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z',
+  },
+  gitlab: {
+    viewBox: '0 0 24 24',
+    d: 'm23.6 9.6-.03-.09-3.27-8.53a.85.85 0 0 0-1.62.09l-2.2 6.75H7.53L5.32 1.07a.85.85 0 0 0-1.62-.09L.43 9.51l-.03.09a6.07 6.07 0 0 0 2.01 7.01l.03.02 4.98 3.73 2.46 1.86 1.5 1.13a1 1 0 0 0 1.22 0l1.5-1.13 2.46-1.86 5.01-3.75a6.07 6.07 0 0 0 2.01-7.01Z',
+  },
+  orcid: {
+    viewBox: '0 0 24 24',
+    d: 'M12 0a12 12 0 1 0 0 24 12 12 0 0 0 0-24ZM8.1 17.5H6.6V7.1h1.5v10.4Zm-.75-11.6a.98.98 0 1 1 0-1.96.98.98 0 0 1 0 1.96Zm3.4 1.2h4.05c3.86 0 5.55 2.76 5.55 5.2 0 2.65-2.09 5.2-5.53 5.2h-4.07V7.1Zm1.5 1.35v7.7h2.4c3.42 0 4.2-2.6 4.2-3.85 0-2.03-1.29-3.85-4.12-3.85h-2.48Z',
+  },
+};
+const fill = fills[name];
+---
+
+{
+  fill ? (
+    <svg viewBox={fill.viewBox} class={className} fill="currentColor" aria-hidden="true">
+      <path d={fill.d} />
+    </svg>
+  ) : (
+    <svg
+      viewBox="0 0 24 24"
+      class={className}
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d={strokes[name]} />
+    </svg>
+  )
+}

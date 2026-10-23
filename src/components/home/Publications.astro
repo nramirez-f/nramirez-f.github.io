@@ -1,0 +1,84 @@
+---
+import HomeSection from '@/components/ui/HomeSection.astro';
+import YearGroup from '@/components/ui/YearGroup.astro';
+import Tag from '@/components/ui/Tag.astro';
+import PublicationItem from '@/components/PublicationItem.astro';
+import { getPublications, groupByYear } from '@/lib/data';
+import type { Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const es = lang === 'es';
+const TFM_URL = 'https://github.com/nramirez-f/Lid-Driven-Cavity';
+
+const pubs = await getPublications();
+const papers = pubs.filter((p) => p.data.status === 'published' || p.data.status === 'accepted');
+const preprints = pubs.filter((p) => p.data.status === 'submitted' || p.data.status === 'preprint');
+const groups = [
+  { title: es ? 'Artículos' : 'Journal articles', items: papers },
+  { title: es ? 'Preprints y artículos enviados' : 'Preprints and submitted papers', items: preprints },
+].filter((g) => g.items.length > 0);
+
+const theses = [
+  {
+    year: 2024,
+    kind: es ? 'Trabajo Fin de Máster' : 'Master thesis',
+    title: es ? 'Las ecuaciones de Navier–Stokes. Teoría e implementación numérica' : 'Navier–Stokes equations. Theory and numerical implementation',
+    where: es ? 'Máster en Matemáticas, Universidad de Málaga' : 'MSc in Mathematics, University of Málaga',
+    honours: es ? 'Matrícula de Honor' : 'With Honours',
+    link: { href: TFM_URL, label: es ? 'Memoria y código (Lid-Driven Cavity)' : 'Thesis and code (Lid-Driven Cavity)' },
+  },
+  {
+    year: 2022,
+    kind: es ? 'Trabajo Fin de Grado' : 'Bachelor thesis',
+    title: es ? 'Transformada Z y sus aplicaciones a señales y sistemas' : 'Z-transform and applications to signals and systems',
+    where: es ? 'Grado en Matemáticas, Universidad de Málaga' : 'BSc in Mathematics, University of Málaga',
+  },
+];
+const h3 = 'mb-2 text-2xl font-bold';
+---
+
+<HomeSection section="publications" lang={lang}>
+  {
+    groups.map((g) => (
+      <div class="mb-14">
+        <h3 class={h3}>{g.title}</h3>
+        {groupByYear(g.items, (p) => new Date(Date.UTC(p.data.year, 0, 1))).map(([year, items]) => (
+          <YearGroup year={year}>
+            {items.map((p) => (
+              <PublicationItem pub={p} lang={lang} showYear={false} />
+            ))}
+          </YearGroup>
+        ))}
+      </div>
+    ))
+  }
+  {
+    pubs.length === 0 && (
+      <p class="border-line-strong text-ink-soft mb-14 max-w-2xl rounded-2xl border border-dashed px-6 py-5">
+        {es
+          ? 'Primer artículo en revisión; aparecerá aquí en cuanto esté disponible como preprint.'
+          : 'First paper under review; it will appear here as soon as the preprint is available.'}
+      </p>
+    )
+  }
+
+  <h3 class={h3}>{es ? 'Trabajos académicos' : 'Theses'}</h3>
+  {
+    theses.map((t) => (
+      <YearGroup year={t.year}>
+        <li>
+          <span class="block font-bold">{t.title}</span>
+          <span class="text-ink-soft block text-sm">{t.where}</span>
+          <span class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+            <em>{t.kind}</em>
+            {t.honours && <Tag tone="accent">{t.honours}</Tag>}
+            {t.link && <a href={t.link.href}>{t.link.label}</a>}
+          </span>
+        </li>
+      </YearGroup>
+    ))
+  }
+</HomeSection>

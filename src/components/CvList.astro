@@ -10,13 +10,13 @@ interface Props {
 const { items, lang } = Astro.props;
 ---
 
-<ul class="entries">
+<ul class="grid gap-4">
   {
     items.map((it) => (
       <Entry when={l(it.when, lang)}>
-        <span>{it.url ? <a href={it.url}>{l(it.what, lang)}</a> : l(it.what, lang)}</span>
+        <span class="font-semibold">{it.url ? <a href={it.url}>{l(it.what, lang)}</a> : l(it.what, lang)}</span>
         {it.where && <span class="text-ink-soft">. {l(it.where, lang)}</span>}
-        {it.detail && <span class="block text-[0.95rem]">{l(it.detail, lang)}</span>}
+        {it.detail && <span class="text-ink-soft block text-sm">{l(it.detail, lang)}</span>}
       </Entry>
     ))
   }

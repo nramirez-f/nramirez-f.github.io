@@ -12,10 +12,10 @@ const { label } = Astro.props;
   data-theme-toggle
   aria-label={label}
   title={label}
-  class="text-ink-soft hover:text-signal flex h-8 w-8 shrink-0 items-center justify-center transition-colors"
+  class="border-line text-ink-soft hover:text-ink hover:border-line-strong flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-lg border transition-colors"
 >
   <svg
-    class="h-4 w-4 dark:hidden"
+    class="size-4 dark:hidden"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
@@ -30,7 +30,7 @@ const { label } = Astro.props;
     ></path>
   </svg>
   <svg
-    class="hidden h-4 w-4 dark:block"
+    class="hidden size-4 dark:block"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"

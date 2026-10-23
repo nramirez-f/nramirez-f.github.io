@@ -4,6 +4,7 @@
 export const SITE = {
   // Same form as on publications.
   name: 'José Ignacio Ramírez-Fuentes',
+  shortName: 'J. I. Ramírez-Fuentes', // header on narrow screens
   email: 'nramirez@uma.es',
   university: { es: 'Universidad de Málaga', en: 'University of Málaga' },
   department: {

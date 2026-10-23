@@ -1,10 +1,28 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { UI } from '@/i18n';
+import Container from '@/components/ui/Container.astro';
+import Button from '@/components/ui/Button.astro';
+import Tsunami404 from '@/components/Tsunami404.astro';
 ---
 
 <BaseLayout title="404" lang="es" noindex>
-  <h1 class="mb-4 text-[1.7rem]">404</h1>
-  <p>{UI.es.notFound} <a href="/">{UI.es.backHome}</a>.</p>
-  <p lang="en" class="text-ink-soft mt-2">{UI.en.notFound} <a href="/en/">{UI.en.backHome}</a>.</p>
+  <Container class="grid grid-cols-1 items-center gap-10 py-16 sm:py-24 lg:grid-cols-2 lg:gap-16">
+    <Tsunami404 label="Animación: una ola gigante se abalanza sobre un matemático que comprueba en su pizarra si se cumple la condición CFL." />
+    <div>
+      <p class="text-deep text-7xl font-bold sm:text-8xl">404</p>
+      <h1 class="mt-4 text-3xl font-bold sm:text-4xl">Esta página se la ha llevado la ola.</h1>
+      <p class="text-ink-soft mt-4 text-lg">
+        Tomamos un Δt demasiado grande, violamos la condición CFL y la página divergió. Ni el esquema más bien
+        equilibrado ha podido salvarla.
+      </p>
+      <p lang="en" class="text-ink-soft mt-4 border-line border-t pt-4">
+        This page was swept away by the wave: our time step broke the CFL condition and it diverged. Not even a
+        well-balanced scheme could save it.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <Button href="/">Volver a tierra firme</Button>
+        <Button href="/en/" variant="ghost" lang="en">Back to dry land</Button>
+      </div>
+    </div>
+  </Container>
 </BaseLayout>

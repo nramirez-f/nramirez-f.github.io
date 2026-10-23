@@ -6,7 +6,7 @@ interface Props {
 const { when } = Astro.props;
 ---
 
-<li class="entry">
-  <span class="entry-when">{when}</span>
+<li class="grid grid-cols-1 gap-x-5 gap-y-0.5 sm:grid-cols-(--cols-entry)">
+  <span class="text-ink-soft text-sm font-semibold tabular-nums sm:pt-0.5">{when}</span>
   <div><slot /></div>
 </li>

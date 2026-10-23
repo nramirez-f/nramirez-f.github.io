@@ -1,0 +1,15 @@
+---
+// One year of a publication-style list: the year, large and pinned while
+// its entries scroll past, beside the entries (passed as <li> children).
+interface Props {
+  year: string | number;
+}
+const { year } = Astro.props;
+---
+
+<div class="border-line grid grid-cols-1 gap-x-8 gap-y-3 border-t py-6 sm:grid-cols-(--cols-entry)">
+  <p class="font-display text-ink-soft self-start text-3xl font-bold tabular-nums sm:sticky sm:top-20">{year}</p>
+  <ul class="grid gap-6">
+    <slot />
+  </ul>
+</div>

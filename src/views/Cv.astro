@@ -5,6 +5,7 @@ import TalkItem from '@/components/TalkItem.astro';
 import ProjectItem from '@/components/ProjectItem.astro';
 import PublicationItem from '@/components/PublicationItem.astro';
 import TeachingTable from '@/components/TeachingTable.astro';
+import Icon from '@/components/ui/Icon.astro';
 import { SITE } from '@/site.config';
 import { getTalks, getProjects, getPublications } from '@/lib/data';
 import {
@@ -18,7 +19,7 @@ import {
   SERVICE,
   LANGUAGES,
 } from '@/data/cv';
-import { UI, l, formatDate, type Lang } from '@/i18n';
+import { UI, NAV_LABELS, l, formatDate, type Lang } from '@/i18n';
 
 interface Props {
   lang: Lang;
@@ -30,26 +31,32 @@ const ui = UI[lang];
 const [talks, projects, pubs] = await Promise.all([getTalks(), getProjects(), getPublications()]);
 ---
 
-<div class="flex flex-wrap items-center justify-between gap-3 print:hidden">
-  <p class="text-ink-soft">
-    {SITE.email} · {SITE.group.name}, {l(SITE.university, lang)}
-  </p>
+<header class="border-line flex flex-wrap items-end justify-between gap-4 border-b pb-6">
+  <div>
+    <h1 class="text-5xl font-bold sm:text-6xl">{NAV_LABELS.cv[lang]}</h1>
+    <p class="text-ink-soft mt-2">{SITE.name} · {SITE.email} · {SITE.group.name}, {l(SITE.university, lang)}</p>
+  </div>
   {
     SITE.cvPdf ? (
-      <a href={SITE.cvPdf} class="border-signal border px-3 py-1 no-underline hover:underline" download>
+      <a
+        href={SITE.cvPdf}
+        download
+        class="bg-deep text-paper hover:bg-ink inline-flex min-h-11 items-center gap-2 rounded-xl px-5 py-2 font-bold no-underline print:hidden"
+      >
         {ui.download}
       </a>
     ) : (
       <button
         type="button"
         data-print
-        class="border-signal text-signal cursor-pointer border px-3 py-1 hover:underline"
+        class="border-line-strong text-ink hover:border-deep inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-xl border px-5 py-2 font-bold print:hidden"
       >
+        <Icon name="print" />
         {es ? 'Imprimir / guardar en PDF' : 'Print / save as PDF'}
       </button>
     )
   }
-</div>
+</header>
 
 <Section title={es ? 'Formación académica' : 'Education'}>
   <CvList items={EDUCATION} lang={lang} />
@@ -60,7 +67,7 @@ const [talks, projects, pubs] = await Promise.all([getTalks(), getProjects(), ge
 </Section>
 
 <Section title={es ? 'Proyectos de investigación' : 'Research projects'}>
-  <ul class="entries">
+  <ul class="grid gap-4">
     {projects.map((p) => <ProjectItem project={p} lang={lang} compact />)}
   </ul>
 </Section>
@@ -68,7 +75,7 @@ const [talks, projects, pubs] = await Promise.all([getTalks(), getProjects(), ge
 {
   pubs.length > 0 && (
     <Section title={es ? 'Publicaciones' : 'Publications'}>
-      <ul class="entries">
+      <ul class="grid gap-4">
         {pubs.map((p) => (
           <PublicationItem pub={p} lang={lang} />
         ))}
@@ -78,7 +85,7 @@ const [talks, projects, pubs] = await Promise.all([getTalks(), getProjects(), ge
 }
 
 <Section title={es ? 'Comunicaciones en congresos' : 'Conference talks'}>
-  <ul class="entries">
+  <ul class="grid gap-4">
     {talks.map((t) => <TalkItem talk={t} lang={lang} />)}
   </ul>
 </Section>
@@ -88,24 +95,24 @@ const [talks, projects, pubs] = await Promise.all([getTalks(), getProjects(), ge
 </Section>
 
 <Section title={es ? 'Formación complementaria' : 'Further training'}>
-  <h3 class="mb-2 text-lg">{es ? 'Escuelas y workshops' : 'Schools and workshops'}</h3>
+  <h3 class="mb-3 text-xl font-bold">{es ? 'Escuelas y workshops' : 'Schools and workshops'}</h3>
   <CvList items={SCHOOLS} lang={lang} />
 
-  <h3 class="mt-6 mb-2 text-lg">{es ? 'Asistencia a congresos' : 'Conferences attended'}</h3>
+  <h3 class="mt-8 mb-3 text-xl font-bold">{es ? 'Asistencia a congresos' : 'Conferences attended'}</h3>
   <CvList items={CONFERENCES_ATTENDED} lang={lang} />
 
-  <h3 class="mt-6 mb-2 text-lg">{es ? 'Cursos' : 'Courses'}</h3>
+  <h3 class="mt-8 mb-3 text-xl font-bold">{es ? 'Cursos' : 'Courses'}</h3>
   <CvList items={COURSES} lang={lang} />
 
   <details class="mt-6">
-    <summary class="cursor-pointer text-lg font-bold">
+    <summary class="font-display cursor-pointer text-xl font-bold">
       {es ? `Seminarios del grupo EDANYA (${SEMINARS.length})` : `EDANYA group seminars (${SEMINARS.length})`}
     </summary>
-    <ul class="entries mt-3 text-[0.95rem]">
+    <ul class="mt-4 grid gap-3 text-sm">
       {
         SEMINARS.map((s) => (
-          <li class="entry">
-            <span class="entry-when">{formatDate(new Date(s.date), lang, { dateStyle: 'medium' })}</span>
+          <li class="grid grid-cols-1 gap-x-5 sm:grid-cols-(--cols-entry)">
+            <span class="text-ink-soft font-bold tabular-nums">{formatDate(new Date(s.date), lang, { dateStyle: 'medium' })}</span>
             <div>
               {s.speaker}. <em>{s.title}</em>
             </div>
@@ -135,27 +142,25 @@ const [talks, projects, pubs] = await Promise.all([getTalks(), getProjects(), ge
 </script>
 
 <style is:global>
+  /* Print: only the CV, black on white, every list expanded. Print media
+     and ::details-content have no Tailwind utilities for these resets. */
   @media print {
     html {
       font-size: 11pt;
-    }
-    body > header nav,
-    body > header [data-theme-toggle],
-    body > header a[hreflang],
-    body > footer,
-    a[href='#content'] {
-      display: none !important;
     }
     :root,
     :root.dark {
       color-scheme: light;
       --paper: #fff;
+      --surface: #fff;
+      --surface-2: #fff;
       --ink: #000;
       --ink-soft: #333;
       --signal: #000;
+      --deep: #000;
       --line: #ccc;
+      --line-strong: #999;
     }
-    /* Print the collapsed seminar list too. */
     details > summary {
       list-style: none;
     }

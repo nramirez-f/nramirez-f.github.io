@@ -1,26 +1,58 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import Entry from '@/components/Entry.astro';
+import Card from '@/components/ui/Card.astro';
+import Tag from '@/components/ui/Tag.astro';
 import { l, type Lang } from '@/i18n';
 
 interface Props {
   project: CollectionEntry<'projects'>;
   lang: Lang;
   compact?: boolean;
+  /** `card`: home page; `entry`: CV row. */
+  variant?: 'entry' | 'card';
 }
-const { project, lang, compact = false } = Astro.props;
+const { project, lang, compact = false, variant = 'entry' } = Astro.props;
 const p = project.data;
 const when = `${p.start.getUTCFullYear()} – ${p.end.getUTCFullYear()}`;
 const pi = lang === 'es' ? 'IP' : p.pis.length > 1 ? 'PIs' : 'PI';
+const website = p.website && new URL(p.website).hostname.replace(/^www\./, '');
 ---
 
-<Entry when={when}>
-  <span class="font-bold">
-    {p.acronym && <>{p.url ? <a href={p.url}>{p.acronym}</a> : p.acronym}: </>}
-    {l(p.title, lang)}
-  </span>
-  <span class="text-ink-soft block text-[0.95rem]">
-    {l(p.funder, lang)}{p.reference && <> ({p.reference})</>}. {pi}: {p.pis.join(', ')}.
-  </span>
-  {!compact && p.summary && <span class="block text-[0.95rem]">{l(p.summary, lang)}</span>}
-</Entry>
+{
+  variant === 'entry' ? (
+    <Entry when={when}>
+      <span class="font-semibold">
+        {p.acronym && <>{p.url ? <a href={p.url}>{p.acronym}</a> : p.acronym}: </>}
+        {l(p.title, lang)}
+      </span>
+      <span class="text-ink-soft block text-sm">
+        {l(p.funder, lang)}
+        {p.reference && <> ({p.reference})</>}. {pi}: {p.pis.join(', ')}.
+      </span>
+      {!compact && p.summary && <span class="block text-sm">{l(p.summary, lang)}</span>}
+      {p.website && <a href={p.website} class="block text-sm">{website}</a>}
+    </Entry>
+  ) : (
+    <Card as="li" size="sm" class="flex flex-col">
+      <div class="flex flex-wrap items-center gap-2">
+        <Tag tone="accent">{when}</Tag>
+        {p.acronym && (
+          <span class="font-display font-bold">{p.url ? <a href={p.url}>{p.acronym}</a> : p.acronym}</span>
+        )}
+      </div>
+      <p class="mt-3 font-semibold">{l(p.title, lang)}</p>
+      {p.summary && <p class="mt-2 text-sm">{l(p.summary, lang)}</p>}
+      {p.website && (
+        <a href={p.website} class="mt-2 self-start text-sm font-bold">
+          {website}
+        </a>
+      )}
+      <p class="text-ink-soft mt-auto pt-4 text-sm">
+        {l(p.funder, lang)}
+        {p.reference && <> ({p.reference})</>}.<br />
+        {pi}: {p.pis.join(', ')}.
+      </p>
+    </Card>
+  )
+}

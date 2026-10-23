@@ -1,4 +1,6 @@
 # Funded research projects I take part in (no budget figures on the web).
+# url: project page (or the group's page about it); website?: a public site
+# built by the project.
 
 geo-inquire:
   acronym: Geo-INQUIRE
@@ -14,6 +16,7 @@ geo-inquire:
     en: European geoscience data and service infrastructures; at UMA, simulation of tsunamis and submarine landslides.
 
 economia-azul:
+  acronym: OCEANARIA-ANDALUCÍA
   title:
     es: Inteligencia artificial aplicada a la ciencia del entorno litoral, la seguridad de los usuarios de playas y desarrollo de deportes náuticos para el impulso de la Economía Azul en Andalucía
     en: Artificial intelligence applied to coastal environment science, beach-user safety and nautical sports to boost the Blue Economy in Andalusia
@@ -23,6 +26,8 @@ economia-azul:
   pis: [F. I. Franco Duro, J. Macías Sánchez]
   start: 2023-01-01
   end: 2025-09-30
+  url: https://www.uma.es/edanya/info/149744/oceanaria/
+  website: https://oceanaria.es/
   summary:
     es: Modelos de IA para la predicción de medusas, agregados flotantes y algas; web y aplicación móvil Oceanaria–Andalucía.
     en: AI models to forecast jellyfish, floating aggregates and algae; Oceanaria–Andalucía website and mobile app.

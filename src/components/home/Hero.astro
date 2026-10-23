@@ -1,0 +1,65 @@
+---
+import Container from '@/components/ui/Container.astro';
+import Button from '@/components/ui/Button.astro';
+import Icon, { type IconName } from '@/components/ui/Icon.astro';
+import HeroWaves from '@/components/home/HeroWaves.astro';
+import { SITE } from '@/site.config';
+import { ROUTES, UI, sectionHref, type Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const es = lang === 'es';
+const ui = UI[lang];
+
+const ids: { label: string; value: string; href: string; icon: IconName }[] = [
+  { label: 'ORCID', value: SITE.orcid, href: `https://orcid.org/${SITE.orcid}`, icon: 'orcid' },
+  { label: 'GitHub', value: `@${SITE.github}`, href: `https://github.com/${SITE.github}`, icon: 'github' },
+  { label: 'GitLab', value: `@${SITE.gitlab}`, href: `https://gitlab.com/${SITE.gitlab}`, icon: 'gitlab' },
+];
+
+// Each line rises in turn on load: one orchestrated entrance, nothing else moves.
+const step = (i: number) => `animation-delay: ${i * 90}ms`;
+---
+
+<div class="bg-surface relative overflow-hidden">
+  <Container class="relative z-10 pt-16 pb-64 sm:pt-28 sm:pb-80">
+    <h1 class="text-hero motion-safe:animate-lift font-bold tracking-tight" style={step(0)}>
+      José Ignacio <span class="block">Ramírez-Fuentes</span>
+    </h1>
+    <p class="motion-safe:animate-lift mt-6 text-xl font-bold" style={step(1)}>{ui.role}</p>
+    <p class="text-ink-soft motion-safe:animate-lift mt-2 max-w-xl text-lg" style={step(2)}>
+      {
+        es
+          ? 'Desarrollo métodos de volúmenes finitos bien equilibrados para sistemas hiperbólicos de leyes de balance. Ahora mismo, un esquema semi-implícito para el sistema de aguas someras en dos dimensiones.'
+          : 'I develop well-balanced finite volume methods for hyperbolic systems of balance laws. Right now, a semi-implicit scheme for the two-dimensional shallow-water system.'
+      }
+    </p>
+    <div class="motion-safe:animate-rise mt-8 flex flex-wrap gap-3" style={step(3)}>
+      <Button href={sectionHref('research', lang)}>
+        {es ? 'Ver investigación' : 'See research'}
+        <Icon name="arrow" />
+      </Button>
+      <Button href={ROUTES.cv[lang]} variant="ghost">{es ? 'Ver CV' : 'See CV'}</Button>
+    </div>
+    <ul class="motion-safe:animate-rise mt-6 flex flex-wrap gap-2 text-sm" style={step(4)}>
+      {
+        ids.map((id) => (
+          <li>
+            <a
+              href={id.href}
+              rel="me"
+              class="border-line bg-surface/80 text-ink hover:border-line-strong inline-flex items-center gap-2 rounded-full border py-1 pr-3 pl-2 no-underline"
+            >
+              <Icon name={id.icon} class="text-deep size-4" />
+              <span class="font-bold">{id.label}</span>
+              <span class="text-ink-soft tabular-nums">{id.value}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </Container>
+  <HeroWaves />
+</div>

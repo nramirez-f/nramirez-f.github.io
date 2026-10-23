@@ -16,6 +16,7 @@ const talks = defineCollection({
     eventUrl: z.url().optional(),
     city: localized,
     country: localized,
+    countryCode: z.string().regex(/^[A-Z]{2}$/), // ISO 3166-1 alpha-2, shades the country on the map
     coords: z.tuple([z.number(), z.number()]), // [lat, lon] for the map
     start: z.coerce.date(),
     end: z.coerce.date().optional(),
@@ -54,6 +55,7 @@ const projects = defineCollection({
     start: z.coerce.date(),
     end: z.coerce.date(),
     url: z.url().optional(),
+    website: z.url().optional(), // public site built by the project
     summary: localized.optional(),
   }),
 });

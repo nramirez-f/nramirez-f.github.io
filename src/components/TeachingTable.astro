@@ -14,39 +14,61 @@ const h =
     : { subject: 'Subject', degree: 'Degree', kind: 'Type', hours: 'Hours', theory: 'Lectures', practice: 'Problem classes', year: 'Academic year' };
 ---
 
-<div class="space-y-7">
+<div class="space-y-8">
   {
     years.map(({ year, items, hours }) => (
       <div>
-        <h3 class="mb-1.5 text-lg">
+        <h3 class="mb-3 text-lg font-bold">
           {h.year} {year}
         </h3>
-        <div class="overflow-x-auto">
-          <table class="w-full min-w-[32rem] table-fixed border-collapse text-[0.95rem]">
-            <thead>
-              <tr class="border-ink border-t border-b text-left">
-                <th class="w-[40%] py-1 pr-3 font-bold">{h.subject}</th>
-                <th class="w-[36%] py-1 pr-3 font-bold">{h.degree}</th>
-                <th class="w-[14%] py-1 pr-3 font-bold">{h.kind}</th>
-                <th class="w-[10%] py-1 text-right font-bold">{h.hours}</th>
+        {/* Mobile: one stacked row per subject. From sm: the table. */}
+        <ul class="border-line bg-surface divide-line divide-y rounded-xl border text-sm sm:hidden">
+          {items.map((r) => (
+            <li class="px-4 py-3">
+              <span class="flex items-baseline justify-between gap-3">
+                <span class="font-bold">{l(r.data.subject, lang)}</span>
+                <span class="shrink-0 tabular-nums">
+                  {r.data.hours} {ui.hours}
+                </span>
+              </span>
+              <span class="text-ink-soft block">
+                {l(r.data.degree, lang)} · {r.data.kind === 'theory' ? h.theory : h.practice}
+              </span>
+            </li>
+          ))}
+          <li class="flex justify-between px-4 py-3 font-bold">
+            <span>{ui.total}</span>
+            <span class="tabular-nums">
+              {hours} {ui.hours}
+            </span>
+          </li>
+        </ul>
+        <div class="border-line bg-surface hidden overflow-x-auto rounded-xl border sm:block">
+          <table class="w-full border-collapse text-sm">
+            <thead class="bg-surface-2 text-ink-soft text-left">
+              <tr>
+                <th class="w-2/5 px-4 py-2.5 font-semibold">{h.subject}</th>
+                <th class="px-4 py-2.5 font-semibold">{h.degree}</th>
+                <th class="px-4 py-2.5 font-semibold">{h.kind}</th>
+                <th class="px-4 py-2.5 text-right font-semibold">{h.hours}</th>
               </tr>
             </thead>
             <tbody>
               {items.map((r) => (
-                <tr class="border-line border-b">
-                  <td class="py-1 pr-3">{l(r.data.subject, lang)}</td>
-                  <td class="text-ink-soft py-1 pr-3">{l(r.data.degree, lang)}</td>
-                  <td class="text-ink-soft py-1 pr-3">{r.data.kind === 'theory' ? h.theory : h.practice}</td>
-                  <td class="py-1 text-right tabular-nums">{r.data.hours}</td>
+                <tr class="border-line border-t">
+                  <td class="px-4 py-2.5 font-semibold">{l(r.data.subject, lang)}</td>
+                  <td class="text-ink-soft px-4 py-2.5">{l(r.data.degree, lang)}</td>
+                  <td class="text-ink-soft px-4 py-2.5">{r.data.kind === 'theory' ? h.theory : h.practice}</td>
+                  <td class="px-4 py-2.5 text-right tabular-nums">{r.data.hours}</td>
                 </tr>
               ))}
             </tbody>
             <tfoot>
-              <tr class="border-ink border-b">
-                <td class="py-1 pr-3 font-bold" colspan="3">
+              <tr class="border-line-strong border-t font-bold">
+                <td class="px-4 py-2.5" colspan="3">
                   {ui.total}
                 </td>
-                <td class="py-1 text-right font-bold tabular-nums">
+                <td class="px-4 py-2.5 text-right tabular-nums">
                   {hours} {ui.hours}
                 </td>
               </tr>

@@ -1,0 +1,51 @@
+---
+import Container from '@/components/ui/Container.astro';
+import { getTalks, getPublications } from '@/lib/data';
+import { UI, l, formatDate, sectionHref, type Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const ui = UI[lang];
+
+const [talks, pubs] = await Promise.all([getTalks(), getPublications()]);
+const news = [
+  ...talks.map((t) => ({
+    date: t.data.start,
+    text: `${ui.talkAt} ${l(t.data.event, lang).split(' – ')[0]} (${l(t.data.city, lang)}): «${t.data.title}».`,
+    href: sectionHref('talks', lang),
+  })),
+  ...pubs.map((p) => ({
+    date: new Date(Date.UTC(p.data.year, 0, 1)),
+    text: `${p.data.status === 'published' ? (lang === 'es' ? 'Publicado' : 'Published') : lang === 'es' ? 'Nuevo preprint' : 'New preprint'}: «${p.data.title}».`,
+    href: sectionHref('publications', lang),
+  })),
+]
+  .sort((a, b) => b.date.valueOf() - a.date.valueOf())
+  .slice(0, 5);
+---
+
+{
+  news.length > 0 && (
+    <section aria-labelledby="news-title" class="py-14">
+      <Container class="grid grid-cols-1 gap-6 lg:grid-cols-4">
+        <h2 id="news-title" class="text-xl font-bold">
+          {ui.news}
+        </h2>
+        <ul class="grid gap-3 lg:col-span-3">
+          {news.map((n) => (
+            <li class="grid grid-cols-1 gap-x-5 sm:grid-cols-(--cols-entry)">
+              <span class="text-ink-soft text-sm font-semibold tabular-nums sm:pt-0.5">
+                {formatDate(n.date, lang, { month: 'short', year: 'numeric' })}
+              </span>
+              <a href={n.href} class="text-ink hover:text-signal no-underline hover:underline">
+                {n.text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </Container>
+    </section>
+  )
+}

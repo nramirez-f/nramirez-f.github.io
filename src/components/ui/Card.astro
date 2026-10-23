@@ -1,0 +1,25 @@
+---
+// Raised panel. `size` follows hierarchy: large cards group a whole block
+// (timeline, contact), small ones hold a single item.
+import type { HTMLTag } from 'astro/types';
+
+interface Props {
+  as?: HTMLTag;
+  size?: 'lg' | 'sm';
+  /** No inner padding, for cards split into cells. */
+  flush?: boolean;
+  class?: string;
+}
+const { as: Tag = 'div', size = 'lg', flush = false, class: className } = Astro.props;
+---
+
+<Tag
+  class:list={[
+    'bg-surface border-line border',
+    size === 'lg' ? 'shadow-card rounded-2xl' : 'rounded-xl',
+    !flush && (size === 'lg' ? 'p-6 sm:p-7' : 'p-4 sm:p-5'),
+    className,
+  ]}
+>
+  <slot />
+</Tag>

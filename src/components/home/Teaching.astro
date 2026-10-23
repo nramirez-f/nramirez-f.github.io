@@ -1,0 +1,48 @@
+---
+import HomeSection from '@/components/ui/HomeSection.astro';
+import Card from '@/components/ui/Card.astro';
+import TeachingTable from '@/components/TeachingTable.astro';
+import { getTeachingByYear } from '@/lib/data';
+import type { Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const es = lang === 'es';
+const years = await getTeachingByYear();
+const total = years.reduce((sum, y) => sum + y.hours, 0);
+const max = Math.max(...years.map((y) => y.hours));
+---
+
+<HomeSection section="teaching" lang={lang}>
+  <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+    <Card class="self-start">
+      <p class="font-display text-deep text-6xl font-bold tabular-nums">{total}</p>
+      <p class="mt-1 text-lg font-bold">{es ? 'horas de docencia universitaria' : 'hours of university teaching'}</p>
+      <p class="text-ink-soft mt-1 text-sm">
+        {
+          es
+            ? `en ${years.length} cursos académicos, como colaboración docente en grados oficiales de la Universidad de Málaga`
+            : `over ${years.length} academic years, as a teaching collaborator in official degree programmes at the University of Málaga`
+        }
+      </p>
+      <ul class="mt-6 grid gap-3" aria-label={es ? 'Horas por curso' : 'Hours per academic year'}>
+        {
+          [...years].reverse().map((y) => (
+            <li class="grid grid-cols-(--cols-bars) items-center gap-3 text-sm">
+              <span class="tabular-nums">{y.year}</span>
+              <span class="bg-surface-2 h-3 overflow-hidden rounded-full">
+                <span class="bg-water block h-full rounded-full" style={`width: ${(y.hours / max) * 100}%`} />
+              </span>
+              <span class="text-right font-bold tabular-nums">{y.hours} h</span>
+            </li>
+          ))
+        }
+      </ul>
+    </Card>
+    <div class="lg:col-span-2">
+      <TeachingTable lang={lang} />
+    </div>
+  </div>
+</HomeSection>

@@ -1,29 +1,86 @@
 ---
-import { SITE, PROFILES } from '@/site.config';
-import { l, type Lang } from '@/i18n';
+import Container from '@/components/ui/Container.astro';
+import Icon, { type IconName } from '@/components/ui/Icon.astro';
+import { SITE } from '@/site.config';
+import { ROUTES, UI, l, formatDate, type Lang, type PageKey } from '@/i18n';
 
 interface Props {
   lang: Lang;
+  page?: PageKey;
 }
-const { lang } = Astro.props;
-const year = new Date().getFullYear();
+const { lang, page } = Astro.props;
+const ui = UI[lang];
+const es = lang === 'es';
+const other: Lang = lang === 'es' ? 'en' : 'es';
+const now = new Date();
+const updated = formatDate(now, lang, { month: 'long', year: 'numeric' });
+
+// Personal profiles carry rel="me" (identity verification); institutions do not.
+const profiles: { label: string; value: string; href: string; icon: IconName; me: boolean }[] = [
+  { label: 'ORCID', value: SITE.orcid, href: `https://orcid.org/${SITE.orcid}`, icon: 'orcid', me: true },
+  { label: 'GitHub', value: `@${SITE.github}`, href: `https://github.com/${SITE.github}`, icon: 'github', me: true },
+  { label: 'GitLab', value: `@${SITE.gitlab}`, href: `https://gitlab.com/${SITE.gitlab}`, icon: 'gitlab', me: true },
+  { label: SITE.group.name, value: SITE.group.code, href: SITE.group.url, icon: 'building', me: false },
+  { label: l(SITE.university, lang), value: 'uma.es', href: 'https://www.uma.es/', icon: 'building', me: false },
+];
 ---
 
-<footer class="mx-auto max-w-[54rem] px-5 pt-6 pb-12">
-  <div class="border-line text-ink-soft flex flex-col gap-2 border-t pt-4 text-sm sm:flex-row sm:justify-between">
-    <p>
-      © {year} {SITE.name} · {SITE.group.name}, {l(SITE.university, lang)}
-    </p>
-    <ul class="flex flex-wrap gap-x-3">
-      {
-        PROFILES.map((p) => (
-          <li>
-            <a href={p.href} rel="me" class="no-underline hover:underline">
-              {p.label}
-            </a>
-          </li>
-        ))
-      }
-    </ul>
-  </div>
+<footer class="border-line bg-surface-2 mt-12 border-t pt-12 pb-8 text-sm print:hidden">
+  <Container>
+    <div class="grid grid-cols-1 gap-10 lg:grid-cols-5">
+      <div class="lg:col-span-2">
+        <p class="font-display text-ink text-lg font-bold">{SITE.name}</p>
+        <p class="text-ink-soft mt-2 max-w-sm">
+          {ui.role}<br />
+          {SITE.group.name} · {l(SITE.university, lang)}
+        </p>
+        <a href={`mailto:${SITE.email}`} class="mt-3 inline-flex items-center gap-2 font-bold">
+          <Icon name="mail" />
+          {SITE.email}
+        </a>
+      </div>
+
+      <div class="lg:col-span-3">
+        <p class="font-display text-ink mb-3 text-base font-bold">{es ? 'Perfiles' : 'Profiles'}</p>
+        <ul class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {
+            profiles.map((p) => (
+              <li>
+                <a
+                  href={p.href}
+                  rel={p.me ? 'me' : undefined}
+                  class="border-line bg-surface text-ink hover:border-deep group flex items-center gap-3 rounded-xl border px-4 py-3 no-underline transition-colors"
+                >
+                  <span class="bg-deep-soft text-deep grid size-9 shrink-0 place-items-center rounded-lg">
+                    <Icon name={p.icon} class="size-4" />
+                  </span>
+                  <span class="min-w-0">
+                    <span class="block font-bold">{p.label}</span>
+                    <span class="text-ink-soft block truncate text-xs tabular-nums">{p.value}</span>
+                  </span>
+                  <Icon name="external" class="text-ink-soft group-hover:text-deep ml-auto size-4 shrink-0" />
+                  <span class="sr-only">{ui.external}</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-line text-ink-soft mt-10 flex flex-col gap-3 border-t pt-5 sm:flex-row sm:items-center sm:justify-between">
+      <p>
+        © {now.getFullYear()} {SITE.name}. {ui.updated} <time datetime={now.toISOString().slice(0, 7)}>{updated}</time>.
+      </p>
+      <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
+        <a href="#content" class="text-ink-soft hover:text-ink inline-flex items-center gap-1.5">
+          <Icon name="arrow-up" />
+          {es ? 'Volver arriba' : 'Back to top'}
+        </a>
+        <a href={ROUTES[page ?? 'home'][other]} hreflang={other} lang={other} class="text-ink-soft hover:text-ink">
+          {other === 'en' ? 'English version' : 'Versión en español'}
+        </a>
+      </div>
+    </div>
+  </Container>
 </footer>

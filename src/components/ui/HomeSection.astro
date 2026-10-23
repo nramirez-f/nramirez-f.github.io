@@ -1,0 +1,29 @@
+---
+// One anchored section of the home page: heading and optional lead sentence.
+// The `bleed` slot renders full width, between the heading and the content.
+import Container from '@/components/ui/Container.astro';
+import { SECTION_IDS, SECTION_LABELS, type Lang, type SectionKey } from '@/i18n';
+
+interface Props {
+  section: SectionKey;
+  lang: Lang;
+  lead?: string;
+}
+const { section, lang, lead } = Astro.props;
+const id = SECTION_IDS[section][lang];
+---
+
+<section id={id} aria-labelledby={`${id}-title`} class="border-line border-t py-20 first-of-type:border-t-0 sm:py-24">
+  <Container>
+    <header class="mb-10 max-w-3xl sm:mb-12">
+      <h2 id={`${id}-title`} class="text-4xl font-bold sm:text-5xl">
+        {SECTION_LABELS[section][lang]}
+      </h2>
+      {lead && <p class="text-ink-soft mt-4 text-lg">{lead}</p>}
+    </header>
+  </Container>
+  <slot name="bleed" />
+  <Container>
+    <slot />
+  </Container>
+</section>

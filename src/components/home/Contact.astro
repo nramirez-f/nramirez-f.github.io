@@ -1,0 +1,76 @@
+---
+import HomeSection from '@/components/ui/HomeSection.astro';
+import Card from '@/components/ui/Card.astro';
+import Icon from '@/components/ui/Icon.astro';
+import { SITE, PROFILES } from '@/site.config';
+import { UI, l, type Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const es = lang === 'es';
+const ui = UI[lang];
+
+const values: Record<string, string> = {
+  ORCID: SITE.orcid,
+  GitHub: `@${SITE.github}`,
+  GitLab: `@${SITE.gitlab}`,
+};
+const rows = [
+  ...PROFILES.map((p) => ({ label: p.label, href: p.href, value: values[p.label] ?? '', me: true })),
+  { label: SITE.group.name, href: SITE.group.url, value: SITE.group.code, me: false },
+];
+const faculty = es ? 'Facultad de Ciencias' : 'Faculty of Science';
+---
+
+<HomeSection
+  section="contact"
+  lang={lang}
+  lead={es
+    ? 'Para colaboraciones, charlas o cualquier consulta sobre mi trabajo, escríbeme por correo electrónico.'
+    : 'For collaborations, talks or any question about my work, please write me an email.'}
+>
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-5">
+    <Card class="lg:col-span-3">
+      <p class="text-ink-soft text-sm font-semibold">Email</p>
+      <a href={`mailto:${SITE.email}`} class="font-display mt-1 inline-flex items-center gap-3 text-2xl font-bold break-all sm:text-3xl">
+        {SITE.email}
+      </a>
+      <dl class="border-line mt-6 grid grid-cols-1 gap-x-6 gap-y-4 border-t pt-6 sm:grid-cols-(--cols-entry)">
+        <dt class="text-ink-soft text-sm font-semibold">{es ? 'Afiliación' : 'Affiliation'}</dt>
+        <dd>
+          {l(SITE.department, lang)}<br />
+          {faculty}, {l(SITE.university, lang)}
+        </dd>
+        <dt class="text-ink-soft text-sm font-semibold">{es ? 'Ubicación' : 'Location'}</dt>
+        <dd>{faculty} / {l(SITE.building, lang)}</dd>
+        <dt class="text-ink-soft text-sm font-semibold">{es ? 'Grupo' : 'Group'}</dt>
+        <dd>
+          <a href={SITE.group.url}>{SITE.group.name}</a> ({SITE.group.code}), {l(SITE.group.fullName, lang)}
+        </dd>
+      </dl>
+    </Card>
+
+    <ul class="grid content-start gap-3 lg:col-span-2">
+      {
+        rows.map((r) => (
+          <li>
+            <a
+              href={r.href}
+              rel={r.me ? 'me' : undefined}
+              class="bg-surface border-line text-ink hover:border-deep group flex items-center justify-between gap-4 rounded-xl border px-5 py-4 no-underline transition-colors"
+            >
+              <span class="font-semibold">{r.label}</span>
+              <span class="text-ink-soft flex min-w-0 items-center gap-2 text-sm tabular-nums">
+                <span class="truncate">{r.value}</span>
+                <Icon name="external" class="group-hover:text-deep size-4 shrink-0" />
+                <span class="sr-only">{ui.external}</span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</HomeSection>

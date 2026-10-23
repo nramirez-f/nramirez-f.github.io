@@ -1,0 +1,37 @@
+---
+import HomeSection from '@/components/ui/HomeSection.astro';
+import TalkItem from '@/components/TalkItem.astro';
+import TalksMap from '@/components/TalksMap.astro';
+import { getTalks, groupByYear } from '@/lib/data';
+import type { Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const talks = await getTalks();
+const years = groupByYear(talks, (t) => t.data.start);
+---
+
+<HomeSection
+  section="talks"
+  lang={lang}
+  lead={lang === 'es'
+    ? 'Comunicaciones orales en congresos nacionales e internacionales.'
+    : 'Contributed talks at national and international conferences.'}
+>
+  <TalksMap slot="bleed" talks={talks} lang={lang} />
+
+  {
+    years.map(([year, items]) => (
+      <div class="mt-14">
+        <h3 class="text-ink-soft mb-6 text-4xl font-bold tabular-nums">{year}</h3>
+        <ol class="before:bg-line-strong relative grid gap-6 before:absolute before:top-2 before:bottom-2 before:left-1.25 before:w-0.5 sm:before:left-(--talk-line)">
+          {items.map((talk) => (
+            <TalkItem talk={talk} lang={lang} variant="timeline" />
+          ))}
+        </ol>
+      </div>
+    ))
+  }
+</HomeSection>

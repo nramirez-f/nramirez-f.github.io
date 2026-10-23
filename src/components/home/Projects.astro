@@ -1,0 +1,58 @@
+---
+import HomeSection from '@/components/ui/HomeSection.astro';
+import Card from '@/components/ui/Card.astro';
+import ProjectItem from '@/components/ProjectItem.astro';
+import { getProjects } from '@/lib/data';
+import { l, type Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const es = lang === 'es';
+const projects = await getProjects();
+
+// Static Gantt chart: one bar per project on a shared year axis.
+const first = Math.min(...projects.map((p) => p.data.start.getUTCFullYear()));
+const last = Math.max(...projects.map((p) => p.data.end.getUTCFullYear()), new Date().getUTCFullYear()) + 1;
+const t0 = Date.UTC(first, 0, 1);
+const span = Date.UTC(last, 0, 1) - t0;
+const pct = (d: Date | number) => ((Number(d) - t0) / span) * 100;
+const years = Array.from({ length: last - first }, (_, i) => first + i);
+const today = pct(Date.now());
+const label = (p: (typeof projects)[number]) => p.data.acronym ?? l(p.data.title, lang).split(' ').slice(0, 4).join(' ') + '…';
+---
+
+<HomeSection section="projects" lang={lang}>
+  <Card class="mb-8">
+    <figure>
+      <div class="grid grid-cols-1 gap-x-4 gap-y-3 sm:grid-cols-(--cols-entry)">
+        <span class="hidden sm:block" aria-hidden="true"></span>
+        <div class="text-ink-soft relative h-5 text-xs tabular-nums" aria-hidden="true">
+          {years.map((y) => <span class="absolute top-0 -translate-x-1/2" style={`left: ${pct(Date.UTC(y, 0, 1)) + 50 / years.length}%`}>{y}</span>)}
+        </div>
+        {
+          projects.map((p) => (
+            <>
+              <span class="truncate text-sm font-semibold">{label(p)}</span>
+              <div class="bg-surface-2 relative h-6 overflow-hidden rounded-md">
+                <span
+                  class="bg-water absolute inset-y-1 rounded"
+                  style={`left: ${pct(p.data.start)}%; width: ${pct(p.data.end) - pct(p.data.start)}%`}
+                />
+                <span class="border-ink-soft absolute inset-y-0 border-l border-dashed" style={`left: ${today}%`} aria-hidden="true" />
+              </div>
+            </>
+          ))
+        }
+      </div>
+      <figcaption class="text-ink-soft mt-4 text-sm">
+        {es ? 'Duración de cada proyecto; la línea discontinua marca la fecha actual.' : 'Duration of each project; the dashed line marks today.'}
+      </figcaption>
+    </figure>
+  </Card>
+
+  <ul class="grid grid-cols-1 gap-4 lg:grid-cols-3">
+    {projects.map((p) => <ProjectItem project={p} lang={lang} variant="card" />)}
+  </ul>
+</HomeSection>

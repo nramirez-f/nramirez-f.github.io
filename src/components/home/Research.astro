@@ -1,0 +1,189 @@
+---
+import HomeSection from '@/components/ui/HomeSection.astro';
+import Card from '@/components/ui/Card.astro';
+import Tex from '@/components/Tex.astro';
+import ShallowWaterFigure from '@/components/ShallowWaterFigure.astro';
+import { SITE } from '@/site.config';
+import { EDUCATION } from '@/data/cv';
+import { UI, l, type Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const es = lang === 'es';
+const [d1, d2] = SITE.advisors;
+const tutor = SITE.tutor;
+
+// Education, newest first (from the PhD down).
+const path = EDUCATION;
+
+const lines = [
+  {
+    title: es ? 'Sistemas hiperbólicos de leyes de balance' : 'Hyperbolic systems of balance laws',
+    tex: String.raw`\partial_t \mathbf{U} + \nabla\cdot\mathbf{F}(\mathbf{U}) = \mathbf{S}(\mathbf{U})`,
+  },
+  {
+    title: es
+      ? 'Métodos de volúmenes finitos y esquemas bien equilibrados (well-balanced)'
+      : 'Finite volume methods and well-balanced schemes',
+    tex: String.raw`\mathbf{U}_i^{n+1} = \mathbf{U}_i^{n} - \tfrac{\Delta t}{\Delta x}\bigl(\mathbf{F}_{i+\frac12} - \mathbf{F}_{i-\frac12}\bigr)`,
+  },
+  {
+    // Semi-implicit schemes pay off in the low-Froude regime.
+    title: es
+      ? 'Esquemas semi-implícitos para el sistema de aguas someras bidimensional'
+      : 'Semi-implicit schemes for the two-dimensional shallow-water system',
+    tex: String.raw`\mathrm{Fr} = \frac{|\mathbf{u}|}{\sqrt{p'(h)}} \ll 1`,
+  },
+];
+
+// The second equation is too wide for a phone: there it is set on two lines.
+const shallowWaterNarrow = String.raw`
+\begin{aligned}
+  &\partial_t h + \nabla\cdot(h\mathbf{u}) = 0,\\
+  &\partial_t (h\mathbf{u}) + \nabla\cdot\left(h\,\mathbf{u}\otimes\mathbf{u}\right)\\
+  &\qquad + \nabla\!\left(\tfrac{g}{2}h^2\right) = g\,h\,\nabla H .
+\end{aligned}`;
+const shallowWater = String.raw`
+\begin{aligned}
+  \partial_t h + \nabla\cdot(h\mathbf{u}) &= 0,\\
+  \partial_t (h\mathbf{u}) + \nabla\cdot\left(h\,\mathbf{u}\otimes\mathbf{u}\right)
+    + \nabla\!\left(\tfrac{g}{2}h^2\right) &= g\,h\,\nabla H .
+\end{aligned}`;
+const h3 = 'mb-5 text-2xl font-bold';
+---
+
+<HomeSection section="research" lang={lang}>
+  <div class="grid grid-cols-1 gap-10 lg:grid-cols-5 lg:gap-12">
+    <div class="max-w-prose min-w-0 space-y-4 lg:col-span-3">
+      {
+        es ? (
+          <>
+            <p class="text-xl leading-relaxed">
+              Soy doctorando del <a href={SITE.phd.url}>{l(SITE.phd.program, lang)}</a> de la Universidad de
+              Málaga desde {SITE.phd.start} y miembro del grupo de investigación{' '}
+              <a href={SITE.group.url}>{SITE.group.name}</a>. Mi tesis está dirigida por{' '}
+              <a href={d1.url}>{d1.name}</a> y <a href={d2.url}>{d2.name}</a>, con{' '}
+              <a href={tutor.url}>{tutor.name}</a> como tutor.
+            </p>
+            <p>
+              Mi investigación se centra en métodos de volúmenes finitos bien equilibrados para sistemas
+              hiperbólicos bidimensionales con aplicaciones en dinámica de fluidos. Actualmente trabajo en el
+              desarrollo de un esquema semi-implícito para el sistema de aguas someras (<em>Shallow-Water</em>)
+              en dos dimensiones.
+            </p>
+            <p>
+              Me gradué en Matemáticas en la Universidad de Málaga, donde también completé el Máster de
+              Profesorado y el Máster en Matemáticas, con un trabajo fin de máster sobre las ecuaciones de
+              Navier–Stokes. Antes de empezar el doctorado trabajé como investigador contratado en EDANYA en
+              proyectos de investigación europeos y nacionales. Desarrollo mi propio software científico en
+              Python y C++.
+            </p>
+          </>
+        ) : (
+          <>
+            <p class="text-xl leading-relaxed">
+              I am a PhD student in the <a href={SITE.phd.url}>{l(SITE.phd.program, lang)}</a> at the University
+              of Málaga since {SITE.phd.start} and a member of the <a href={SITE.group.url}>{SITE.group.name}</a>{' '}
+              research group. My thesis is supervised by <a href={d1.url}>{d1.name}</a> and{' '}
+              <a href={d2.url}>{d2.name}</a>, with <a href={tutor.url}>{tutor.name}</a> as my tutor.
+            </p>
+            <p>
+              My research focuses on well-balanced finite volume methods for two-dimensional hyperbolic systems
+              with applications in fluid dynamics. I am currently developing a semi-implicit scheme for the
+              two-dimensional shallow-water system.
+            </p>
+            <p>
+              I graduated in Mathematics from the University of Málaga, where I also completed a Master in
+              Secondary Education Teaching and an MSc in Mathematics, with a master thesis on the Navier–Stokes
+              equations. Before starting my PhD I worked as research staff in EDANYA on European and national
+              research projects. I write my own scientific software in Python and C++.
+            </p>
+          </>
+        )
+      }
+      <p class="text-ink-soft text-sm">
+        {es ? 'Miembro del grupo' : 'Member of the research group'} <a href={SITE.group.url}>{SITE.group.name}</a> ({SITE.group.code}),{' '}
+        {l(SITE.group.fullName, lang)}, {es ? 'desde 2025.' : 'since 2025.'}
+      </p>
+    </div>
+
+    <Card class="lg:col-span-2">
+      <h3 class={h3}>{es ? 'Trayectoria' : 'Career'}</h3>
+      <ol class="border-line-strong ml-1 grid gap-5 border-l">
+        {
+          path.map((it) => (
+            <li class="relative pl-5">
+              <span class="border-water bg-surface absolute top-1.5 -left-1.5 size-2.5 rounded-full border-2" aria-hidden="true" />
+              <p class="text-deep text-sm font-bold tabular-nums">{l(it.when, lang)}</p>
+              <p class="font-semibold">{it.url ? <a href={it.url}>{l(it.what, lang)}</a> : l(it.what, lang)}</p>
+              {it.where && <p class="text-ink-soft text-sm">{l(it.where, lang)}</p>}
+            </li>
+          ))
+        }
+      </ol>
+    </Card>
+  </div>
+
+  <ul class="mt-16 grid grid-cols-1 gap-4 lg:grid-cols-3" aria-label={UI[lang].interests}>
+    {
+      lines.map((line) => (
+        <Card as="li" size="sm" class="flex flex-col gap-3">
+          {/* overflow-y must be hidden: with x on auto, y would turn to auto too and fractions would show a scroll bar. */}
+          <div class="text-deep overflow-x-auto overflow-y-hidden py-1">
+            <Tex tex={line.tex} />
+          </div>
+          <p class="font-semibold">{line.title}</p>
+        </Card>
+      ))
+    }
+  </ul>
+
+  <div class="mt-16 grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12">
+    <div class="max-w-prose min-w-0">
+      <p>
+        {
+          es
+            ? 'Mi investigación se centra en métodos de volúmenes finitos bien equilibrados para sistemas hiperbólicos bidimensionales de leyes de balance, y en particular para el sistema de aguas someras (Shallow-Water):'
+            : 'My research focuses on well-balanced finite volume methods for two-dimensional hyperbolic systems of balance laws, in particular the shallow-water system:'
+        }
+      </p>
+      <div class="my-3 sm:hidden"><Tex tex={shallowWaterNarrow} display /></div>
+      <div class="my-3 hidden sm:block"><Tex tex={shallowWater} display /></div>
+      <p>
+        {
+          es ? (
+            <>
+              donde <Tex tex="h" /> es el espesor de la lámina de agua, <Tex tex="\mathbf{u}" /> la velocidad
+              promediada en vertical, <Tex tex="g" /> la aceleración de la gravedad y <Tex tex="H" /> la
+              profundidad del fondo medida desde un nivel de referencia fijo, de modo que la superficie libre es{' '}
+              <Tex tex="\eta = h - H" />. Un esquema bien equilibrado preserva estados estacionarios como el lago
+              en reposo:
+            </>
+          ) : (
+            <>
+              where <Tex tex="h" /> is the water depth, <Tex tex="\mathbf{u}" /> the depth-averaged velocity,{' '}
+              <Tex tex="g" /> the gravitational acceleration and <Tex tex="H" /> the depth of the bottom measured
+              from a fixed reference level, so that the free surface is <Tex tex="\eta = h - H" />. A
+              well-balanced scheme preserves steady states such as the lake at rest:
+            </>
+          )
+        }
+      </p>
+      <div class="my-3">
+        <Tex tex={String.raw`\eta = h - H = \text{${es ? 'cte' : 'const'}}, \qquad \mathbf{u} = \mathbf{0}.`} display />
+      </div>
+      <p>
+        {
+          es
+            ? 'Actualmente desarrollo un esquema semi-implícito para este sistema en dos dimensiones.'
+            : 'I am currently developing a semi-implicit scheme for this system in two dimensions.'
+        }
+      </p>
+    </div>
+    <Card>
+      <ShallowWaterFigure lang={lang} />
+    </Card>
+  </div>
+</HomeSection>

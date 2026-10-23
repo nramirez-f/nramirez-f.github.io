@@ -1,13 +1,16 @@
 ---
 import type { Publication } from '@/data/publications';
 import Entry from '@/components/Entry.astro';
+import Tag from '@/components/ui/Tag.astro';
 import { UI, type Lang } from '@/i18n';
 
 interface Props {
   pub: Publication;
   lang: Lang;
+  /** Year column (CV). The home page groups publications by year instead. */
+  showYear?: boolean;
 }
-const { pub, lang } = Astro.props;
+const { pub, lang, showYear = true } = Astro.props;
 const p = pub.data;
 const ui = UI[lang];
 const status = {
@@ -16,26 +19,29 @@ const status = {
   submitted: lang === 'es' ? 'Enviado' : 'Submitted',
   preprint: 'Preprint',
 }[p.status];
+const Row = showYear ? Entry : 'li';
 ---
 
-<Entry when={String(p.year)}>
-  <span class="block">{p.authors.join(', ')}.</span>
-  <span class="font-bold">{p.title}.</span>{' '}
-  {p.journal && <em>{p.journal}.</em>}
-  {status && <span class="tag">{status}</span>}
-  <span class="mt-0.5 flex flex-wrap gap-3 text-[0.95rem]">
-    {p.doi && <a href={`https://doi.org/${p.doi}`}>[DOI]</a>}
-    {p.arxiv && <a href={`https://arxiv.org/abs/${p.arxiv}`}>[arXiv:{p.arxiv}]</a>}
-    {p.hal && <a href={`https://hal.science/${p.hal}`}>[HAL]</a>}
+<Row when={showYear ? String(p.year) : undefined}>
+  <span class="block font-semibold">
+    {p.doi ? <a href={`https://doi.org/${p.doi}`} class="text-ink hover:text-signal">{p.title}</a> : p.title}
+  </span>
+  <span class="text-ink-soft block text-sm">{p.authors.join(', ')}</span>
+  <span class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+    {p.journal && <em>{p.journal}</em>}
+    {status && <Tag>{status}</Tag>}
+    {p.doi && <a href={`https://doi.org/${p.doi}`}>DOI</a>}
+    {p.arxiv && <a href={`https://arxiv.org/abs/${p.arxiv}`}>arXiv:{p.arxiv}</a>}
+    {p.hal && <a href={`https://hal.science/${p.hal}`}>HAL</a>}
     {
       p.bibtex && (
         <button type="button" class="text-signal cursor-pointer hover:underline" data-bibtex={p.bibtex.trim()} data-copied={ui.copied}>
-          [{ui.copy}]
+          {ui.copy}
         </button>
       )
     }
   </span>
-</Entry>
+</Row>
 
 <script>
   document.querySelectorAll<HTMLButtonElement>('[data-bibtex]').forEach((button) => {
@@ -44,7 +50,7 @@ const status = {
     const label = button.textContent;
     button.addEventListener('click', async () => {
       await navigator.clipboard.writeText(button.dataset.bibtex ?? '');
-      button.textContent = `[${button.dataset.copied}]`;
+      button.textContent = button.dataset.copied ?? '';
       setTimeout(() => (button.textContent = label), 1500);
     });
   });

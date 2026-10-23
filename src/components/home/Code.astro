@@ -1,4 +1,7 @@
 ---
+import HomeSection from '@/components/ui/HomeSection.astro';
+import Button from '@/components/ui/Button.astro';
+import Icon from '@/components/ui/Icon.astro';
 import { SITE } from '@/site.config';
 import type { Lang } from '@/i18n';
 
@@ -12,39 +15,40 @@ const strings = {
   loading: es ? 'Cargando repositorios…' : 'Loading repositories…',
   empty: es ? 'Todavía no hay repositorios publicados.' : 'No repositories published yet.',
   failed: es ? 'No se pudo consultar' : 'Could not reach',
-  updated: es ? 'actualizado' : 'updated',
+  updated: es ? 'Actualizado el' : 'Updated',
 };
 ---
 
-<p>
-  {
-    es
-      ? 'Software científico que desarrollo en abierto. La lista se obtiene automáticamente de mis cuentas, ordenada por actividad más reciente.'
-      : 'Scientific software I develop in the open. The list is fetched automatically from my accounts, most recently active first.'
-  }
-</p>
-<p class="mt-2">
-  <a href={`https://github.com/${SITE.github}`}>GitHub</a>{' & '}<a href={`https://gitlab.com/${SITE.gitlab}`}>GitLab</a>:{' '}
-  <span class="font-mono">@{SITE.github}</span>
-</p>
-
-<div
-  id="repos"
-  class="mt-8"
-  data-github={SITE.github}
-  data-gitlab={SITE.gitlab}
-  data-topic={SITE.codeTopic}
-  data-lang={lang}
-  data-strings={JSON.stringify(strings)}
+<HomeSection
+  section="code"
+  lang={lang}
+  lead={es
+    ? 'Software científico que desarrollo en abierto. La lista se obtiene automáticamente de mis cuentas, ordenada por actividad más reciente.'
+    : 'Scientific software I develop in the open. The list is fetched automatically from my accounts, most recently active first.'}
 >
-  <p class="text-ink-soft" data-status>{strings.loading}</p>
-  <ul class="entries" data-list></ul>
-</div>
-<noscript>
-  <p class="text-ink-soft">
-    {es ? 'Activa JavaScript para ver la lista, o visita mis perfiles.' : 'Enable JavaScript to see the list, or visit my profiles.'}
-  </p>
-</noscript>
+  <div class="flex flex-wrap gap-3">
+    <Button href={`https://github.com/${SITE.github}`} variant="ghost" rel="me"><Icon name="github" />GitHub</Button>
+    <Button href={`https://gitlab.com/${SITE.gitlab}`} variant="ghost" rel="me"><Icon name="gitlab" />GitLab</Button>
+  </div>
+
+  <div
+    id="repos"
+    class="mt-8"
+    data-github={SITE.github}
+    data-gitlab={SITE.gitlab}
+    data-topic={SITE.codeTopic}
+    data-lang={lang}
+    data-strings={JSON.stringify(strings)}
+  >
+    <p class="text-ink-soft" data-status>{strings.loading}</p>
+    <ul class="grid grid-cols-1 gap-4 md:grid-cols-2" data-list></ul>
+  </div>
+  <noscript>
+    <p class="text-ink-soft">
+      {es ? 'Activa JavaScript para ver la lista, o visita mis perfiles.' : 'Enable JavaScript to see the list, or visit my profiles.'}
+    </p>
+  </noscript>
+</HomeSection>
 
 <script>
   // Repositories are fetched in the browser from the public GitHub and
@@ -120,27 +124,28 @@ const strings = {
     list.replaceChildren(
       ...repos.map((r) => {
         const li = document.createElement('li');
-        li.className = 'entry';
-        const when = document.createElement('span');
-        when.className = 'entry-when';
-        when.textContent = fmt.format(new Date(r.updatedAt));
-        when.title = t.updated;
-        const body = document.createElement('div');
+        li.className = 'bg-surface border-line flex flex-col rounded-xl border p-4 sm:p-5';
+        const head = document.createElement('div');
+        head.className = 'flex flex-wrap items-center justify-between gap-2';
         const link = document.createElement('a');
         link.href = r.url;
-        link.className = 'font-bold';
+        link.className = 'font-display text-lg font-bold';
         link.textContent = r.name;
         const tag = document.createElement('span');
-        tag.className = 'tag ml-2';
+        tag.className = 'border-line-strong text-ink-soft rounded-full border px-2 py-px text-xs font-semibold';
         tag.textContent = [r.host, r.language].filter(Boolean).join(' · ');
-        body.append(link, tag);
+        head.append(link, tag);
+        li.append(head);
         if (r.description) {
-          const desc = document.createElement('span');
-          desc.className = 'text-ink-soft block';
+          const desc = document.createElement('p');
+          desc.className = 'text-ink-soft mt-2 text-sm';
           desc.textContent = r.description;
-          body.append(desc);
+          li.append(desc);
         }
-        li.append(when, body);
+        const when = document.createElement('p');
+        when.className = 'text-ink-soft mt-auto pt-3 text-xs tabular-nums';
+        when.textContent = `${t.updated} ${fmt.format(new Date(r.updatedAt))}`;
+        li.append(when);
         return li;
       }),
     );

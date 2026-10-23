@@ -1,7 +1,9 @@
 ---
 import ThemeToggle from '@/components/ThemeToggle.astro';
+import Container from '@/components/ui/Container.astro';
+import Icon from '@/components/ui/Icon.astro';
 import { SITE } from '@/site.config';
-import { PAGES, ROUTES, NAV_LABELS, UI, l, type Lang, type PageKey } from '@/i18n';
+import { ROUTES, NAV_LABELS, SECTIONS, SECTION_LABELS, UI, l, sectionHref, type Lang, type PageKey } from '@/i18n';
 
 interface Props {
   lang: Lang;
@@ -9,57 +11,112 @@ interface Props {
 }
 
 const { lang, page } = Astro.props;
+const ui = UI[lang];
 const other: Lang = lang === 'es' ? 'en' : 'es';
 const switchHref = ROUTES[page ?? 'home'][other];
-const Name = page === 'home' ? 'h1' : 'p';
+
+const links = [
+  ...SECTIONS.map((key) => ({ href: sectionHref(key, lang), label: SECTION_LABELS[key][lang], current: false })),
+  { href: ROUTES.cv[lang], label: NAV_LABELS.cv[lang], current: page === 'cv' },
+];
 ---
 
-<header class="mx-auto max-w-[54rem] px-5 pt-10 pb-6 sm:pt-14">
-  <div class="flex items-start justify-between gap-4">
-    <div>
-      {/* On the home page the name is the page's main heading (h1). */}
-      <Name class="text-2xl leading-tight font-bold sm:text-[1.7rem]">
-        <a href={ROUTES.home[lang]} class="text-ink no-underline">{SITE.name}</a>
-      </Name>
-      <p class="text-ink-soft mt-1 text-[0.95rem]">
-        {UI[lang].role} · {l(SITE.university, lang)}
-      </p>
-    </div>
-    <div class="flex shrink-0 items-center gap-1 pt-1">
+<header class="border-line bg-paper/80 sticky top-0 z-40 border-b backdrop-blur-md backdrop-saturate-150 print:static">
+  <Container class="flex h-16 items-center justify-between gap-4">
+    <a href={ROUTES.home[lang]} class="text-ink min-w-0 leading-tight no-underline">
+      <span class="font-display block truncate text-sm font-bold sm:text-lg">
+        <span class="sm:hidden">{SITE.shortName}</span>
+        <span class="hidden sm:inline">{SITE.name}</span>
+      </span>
+      <span class="text-ink-soft hidden truncate text-xs sm:block">{ui.role} · {l(SITE.university, lang)}</span>
+    </a>
+
+    <nav aria-label={ui.mainNav} class="hidden xl:block print:hidden">
+      <ul class="flex items-center gap-5 text-sm font-semibold">
+        {
+          links.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                aria-current={link.current ? 'page' : undefined}
+                class="text-ink-soft hover:text-ink aria-[current=page]:text-ink aria-[current=page]:decoration-water no-underline decoration-2 underline-offset-8 hover:underline aria-[current=page]:underline"
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="flex shrink-0 items-center gap-2 print:hidden">
       <a
         href={switchHref}
         hreflang={other}
         lang={other}
-        class="text-ink-soft hover:text-signal px-1 text-sm no-underline"
         title={UI[other].switchTo}
+        class="border-line text-ink-soft hover:text-ink hover:border-line-strong hidden size-9 place-items-center rounded-lg border text-xs font-bold no-underline sm:grid"
       >
         {other.toUpperCase()}
       </a>
-      <ThemeToggle label={UI[lang].themeToggle} />
+      <ThemeToggle label={ui.themeToggle} />
+      <button
+        type="button"
+        popovertarget="site-menu"
+        aria-label={ui.menu}
+        class="border-line text-ink-soft hover:text-ink hover:border-line-strong grid size-9 cursor-pointer place-items-center rounded-lg border xl:hidden"
+      >
+        <Icon name="menu" />
+      </button>
     </div>
-  </div>
+  </Container>
 
-  <nav aria-label={lang === 'es' ? 'Principal' : 'Main'} class="border-ink mt-5 border-t border-b py-1.5">
-    <ul class="flex flex-wrap gap-x-4 gap-y-0.5 text-[0.95rem]">
-      {
-        PAGES.map((key) => {
-          const isActive = key === page;
-          return (
+  {/* Mobile menu: the popover API gives Esc, light dismiss and focus return without a framework. */}
+  <div
+    id="site-menu"
+    popover
+    class="border-line bg-surface text-ink shadow-card fixed inset-x-4 top-18 m-0 ml-auto w-auto max-w-sm rounded-2xl border p-3 sm:right-6 sm:left-auto sm:w-80"
+  >
+    <nav aria-label={ui.mainNav}>
+      <ul class="grid">
+        {
+          links.map((link) => (
             <li>
               <a
-                href={ROUTES[key][lang]}
-                aria-current={isActive ? 'page' : undefined}
-                class:list={[
-                  'no-underline hover:underline',
-                  isActive ? 'text-ink font-bold' : 'text-signal',
-                ]}
+                href={link.href}
+                aria-current={link.current ? 'page' : undefined}
+                class="hover:bg-deep-soft aria-[current=page]:text-deep text-ink block rounded-lg px-3 py-2.5 font-semibold no-underline"
               >
-                {NAV_LABELS[key][lang]}
+                {link.label}
               </a>
             </li>
-          );
-        })
-      }
-    </ul>
-  </nav>
+          ))
+        }
+      </ul>
+    </nav>
+    {/* On phones the language switch lives here, to leave room for the name. */}
+    <a
+      href={switchHref}
+      hreflang={other}
+      lang={other}
+      class="border-line text-ink hover:bg-deep-soft mt-1 block rounded-lg border-t px-3 py-2.5 font-semibold no-underline sm:hidden"
+    >
+      {UI[other].switchTo}
+    </a>
+    <button
+      type="button"
+      popovertarget="site-menu"
+      popovertargetaction="hide"
+      class="text-ink-soft hover:text-ink mt-1 flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm"
+    >
+      <Icon name="close" />
+      {ui.closeMenu}
+    </button>
+  </div>
 </header>
+
+<script>
+  // Same-page anchor links do not close a popover by themselves.
+  const menu = document.getElementById('site-menu');
+  menu?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => menu.hidePopover()));
+</script>

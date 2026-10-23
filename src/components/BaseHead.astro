@@ -13,7 +13,9 @@ interface Props {
 
 const { title: pageTitle, description: pageDescription, lang, page, noindex = false } = Astro.props;
 
-const fullTitle = pageTitle === SITE.name ? SITE.name : `${pageTitle} · ${SITE.name}`;
+// The home page title adds what the person does: a name alone says little in
+// search results. Other pages: "<Page> · <name>".
+const fullTitle = page === 'home' ? `${SITE.name} · ${UI[lang].titleTagline}` : `${pageTitle} · ${SITE.name}`;
 const description = pageDescription || UI[lang].description;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL('/og.png', Astro.site);
@@ -82,15 +84,16 @@ const jsonLd =
 <meta name="generator" content={Astro.generator} />
 <meta name="author" content={SITE.name} />
 
-<link rel="canonical" href={canonicalURL} />
-{noindex && <meta name="robots" content="noindex" />}
+{/* A noindex page (404) gets no canonical or alternates: they would point search engines at a URL that should not be indexed. */}
+{noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonicalURL} />}
 {
   page &&
+    !noindex &&
     LANGS.map((alt) => (
       <link rel="alternate" hreflang={alt} href={new URL(ROUTES[page][alt], Astro.site)} />
     ))
 }
-{page && <link rel="alternate" hreflang="x-default" href={new URL(ROUTES[page].es, Astro.site)} />}
+{page && !noindex && <link rel="alternate" hreflang="x-default" href={new URL(ROUTES[page].es, Astro.site)} />}
 
 <title>{fullTitle}</title>
 <meta name="description" content={description} />
@@ -116,7 +119,10 @@ const jsonLd =
 <link rel="icon" type="image/png" href="/favicon.png" />
 <link rel="apple-touch-icon" href="/favicon.png" />
 
-<Font cssVariable="--ff-serif" preload />
+{/* Preload only what renders above the fold: body text and the bold headings (latin). */}
+<Font cssVariable="--ff-sans" preload={[{ weight: '400', style: 'normal', subset: 'latin' }]} />
+<Font cssVariable="--ff-display" preload={[{ weight: '700', style: 'normal', subset: 'latin' }]} />
+<Font cssVariable="--ff-serif" />
 <Font cssVariable="--ff-mono" />
 
 <script is:inline>

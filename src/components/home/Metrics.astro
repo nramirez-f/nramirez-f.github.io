@@ -1,0 +1,35 @@
+---
+// Figures derived from the data files, so they never go stale.
+import Card from '@/components/ui/Card.astro';
+import { getTalks, getProjects, getPublications, getTeachingByYear } from '@/lib/data';
+import type { Lang } from '@/i18n';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const es = lang === 'es';
+
+const [talks, projects, pubs, teaching] = await Promise.all([getTalks(), getProjects(), getPublications(), getTeachingByYear()]);
+const hours = teaching.reduce((sum, y) => sum + y.hours, 0);
+const international = talks.filter((t) => t.data.scope === 'international').length;
+
+const figures = [
+  ...(pubs.length > 0 ? [{ value: pubs.length, label: es ? 'publicaciones' : 'publications' }] : []),
+  { value: talks.length, label: es ? 'comunicaciones en congresos' : 'conference talks' },
+  { value: international, label: es ? 'de ellas internacionales' : 'of them international' },
+  { value: projects.length, label: es ? 'proyectos financiados' : 'funded projects' },
+  { value: hours, label: es ? 'horas de docencia' : 'teaching hours' },
+];
+---
+
+<Card flush class:list={['grid grid-cols-2', figures.length > 4 ? 'sm:grid-cols-5' : 'sm:grid-cols-4']}>
+  {
+    figures.map((f) => (
+      <div class="border-line px-5 py-5 sm:border-l sm:px-6 sm:first:border-l-0">
+        <p class="font-display text-deep text-5xl font-bold tabular-nums">{f.value}</p>
+        <p class="text-ink-soft mt-1 text-sm">{f.label}</p>
+      </div>
+    ))
+  }
+</Card>
